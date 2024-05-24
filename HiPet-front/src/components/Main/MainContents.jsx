@@ -6,7 +6,7 @@ import EmptyDataPage from './EmptyDataPage';
 import Pagination from 'react-js-pagination';
 
 const MainContents = ({ coinsData }) => {
-    const [currentPage, setCurrentPage] = useState(2);
+    const [currentPage, setCurrentPage] = useState(1);
     const [postsPerPage, setPostPerPage] = useState(15);
     const lastPostIndex = currentPage * postsPerPage;
     const firstPostIndex = lastPostIndex - postsPerPage;
