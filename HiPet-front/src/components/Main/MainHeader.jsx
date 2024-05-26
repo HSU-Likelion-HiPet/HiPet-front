@@ -1,11 +1,14 @@
 import React from 'react';
 import styled from 'styled-components';
 import logo from "../../assets/HiPetLogo.png";
+import { useNavigate } from 'react-router-dom';
 
 const MainHeader = () => {
+    const navigate = useNavigate();
+    
     return (
         <MainHeaderStyle>
-            <div className='logoWrapper'>
+            <div className='logoWrapper' onClick={()=>navigate("/main")}>
                 <img src={logo} alt="HiPetLogo" />
             </div>
             <ul className='nav'>

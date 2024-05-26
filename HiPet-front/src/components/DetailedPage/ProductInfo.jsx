@@ -6,9 +6,13 @@ import nextImg from "../../assets/slide-next.png";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import useCalcDiffDate from '../../hooks/useCalcDiffDate';
 
 const ProductInfo = ({data}) => {
     const ar = ["#차분함", "#조용함", "#귀여움"];
+    const createAt = "2024-05-22T19:34:56";
+
+    const diffDate = useCalcDiffDate(createAt);
     const imgAr = [1,2,3,4,5];
     const settings = {
         dots: imgAr.length >= 2,
@@ -76,7 +80,7 @@ const ProductInfo = ({data}) => {
                         {data.current_price.toLocaleString()}원
                     </span>
                     <span className='uploadDate'>
-                        2주 전
+                        {diffDate}
                     </span>
                     <span className="line"></span>
                     <span className='preferred-area'>거래희망지역</span>
