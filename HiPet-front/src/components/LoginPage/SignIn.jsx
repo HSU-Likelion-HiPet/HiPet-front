@@ -36,8 +36,9 @@ const SignIn = () => {
             }
             else {
                 alert("로그인 성공!");
+                sessionStorage.setItem("currentUserId", id);
                 onReset();
-                navigate("/main")
+                navigate("/main");
             }
         }
     }

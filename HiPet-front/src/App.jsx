@@ -5,13 +5,13 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import Main from "./sections/Main";
 import LoginPage from "./sections/LoginPage";
 import DetailedPage from "./sections/DetailedPage";
-import SignUp from "./components/LoginPage/SignUp";
 import MessageListPage from "./sections/MessageListPage";
 import Test from "./sections/Test";
 import ReviewPage from "./sections/ReviewPage";
 import ReviewSuccessPage from "./sections/ReviewSuccessPage";
 import AnimalRegistration from "./sections/AnimalRegistration";
 import AskPage from "./sections/AskPage";
+import MyPageContent from "./components/myPage/MyPageContent";
 
 function App() {
   const containerRef = useRef(null);
@@ -36,6 +36,7 @@ function App() {
             <Route path="/review-success" element={<ReviewSuccessPage />} />
             <Route path="/registration" element={<AnimalRegistration />} />
             <Route path="/ask" element={<AskPage />} />
+            <Route path="/myPageContent" element={<MyPageContent />} />
           </Routes>
         </main>
       </LocomotiveScrollProvider>

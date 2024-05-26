@@ -3,7 +3,7 @@ import UserInput from './UserInput';
 import LoginPageButton from './LoginPageButton';
 import useInput from '../../hooks/useInput';
 
-const SignUp = () => {
+const SignUp = ({setIsSignUpPage}) => {
     const [username, onChangeUsername, setUsername] = useInput("");
     const [id, onChangeId, setId] = useInput("");
     const [pw, onChangePw, setPw] = useInput("");
@@ -119,8 +119,15 @@ const SignUp = () => {
 
         alert("회원 가입 완료");
         localStorage.setItem(id, JSON.stringify({ username, pw }));
+        setIsSignUpPage(false);
         onReset();
     };
+
+    const [postData, setPostData] = useState({
+        "loginId" : id,
+        "password" : pw,
+        "userName":  username
+    })
 
     return (
         <>

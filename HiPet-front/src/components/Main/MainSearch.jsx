@@ -1,40 +1,30 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import search from "../../assets/search.png";
 
-const MainSearch = () => {
-    const [input, setInput] = useState("");
+const MainSearch = ({ postData, setPostData, handleSubmit }) => {
+    const [input, setInput] = useState(null);
 
     const onChange = (e) => {
-        setInput(e.target.value);
+        setInput(e.target.value === "" ? null : e.target.value);
     }
+
+    useEffect(()=>{
+        setPostData({
+            ...postData,
+            keyword: input
+        })
+    }, [input])
 
     return (
         <MainSearchWrapper>
             <Wrapper>
-                <InputWrapper>
+                <InputWrapper onSubmit={(e)=>handleSubmit(e)}>
                     <input type="text" placeholder='검색어를 입력하세요' value={input} onChange={onChange} />
                     <SearchIcon>
-                        <img src={search} alt="search" onClick={() => console.log(input)} />
+                        <img src={search} alt="search" onClick={handleSubmit} />
                     </SearchIcon>
                 </InputWrapper>
-                <SelectList>
-                    <form>
-                        <select>
-                            <option value="1">Option 1</option>
-                            <option value="2">Option 2</option>
-                            <option value="2">Option 2</option>
-                            <option value="2">Option 2</option>
-                        </select>
-
-                        <select>
-                            <option value="1">Option 1</option>
-                            <option value="2">Option 2</option>
-                            <option value="2">Option 2</option>
-                            <option value="2">Option 2</option>
-                        </select>
-                    </form>
-                </SelectList>
             </Wrapper>
         </MainSearchWrapper>
     );
@@ -42,11 +32,9 @@ const MainSearch = () => {
 
 const MainSearchWrapper = styled.section`
     width: 100%;
-    height: 522px;
+    height: 356px;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    /* margin-bottom: 198px; */
 `;
 
 const Wrapper = styled.div`
@@ -55,6 +43,7 @@ const Wrapper = styled.div`
 
 const InputWrapper = styled.form`
     position: relative;
+    margin-top: 140px;
 
     input {
         border: none;
@@ -83,21 +72,6 @@ const SearchIcon = styled.div`
     right: 2.5%;
     z-index: 2;
     cursor: pointer;
-`;
-
-const SelectList = styled.div`
-    display: flex;
-    width: fit-content;
-    height: fit-content;
-    margin-top: 40px;
-
-    select {
-        background: ${({ theme }) => theme.basicWhite};
-        border: 1px solid #9FA4A8;
-        border-radius: 20px;
-        padding: 17.5px 80.5px 17.5px 35.5px;
-    }
-
 `;
 
 export default MainSearch;
