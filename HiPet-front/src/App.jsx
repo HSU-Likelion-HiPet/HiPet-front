@@ -11,7 +11,8 @@ import ReviewPage from "./sections/ReviewPage";
 import ReviewSuccessPage from "./sections/ReviewSuccessPage";
 import AnimalRegistration from "./sections/AnimalRegistration";
 import AskPage from "./sections/AskPage";
-import MyPageContent from "./components/myPage/MyPageContent";
+import MyPageBottom from "./components/myPage/MyPageBottom";
+import MyPage from "./sections/MyPage";
 
 function App() {
   const containerRef = useRef(null);
@@ -27,16 +28,17 @@ function App() {
       >
         <main data-scroll-container ref={containerRef}>
           <Routes>
-            <Route path="/*" element={<LoginPage />} />
+            <Route path="/" element={<LoginPage />} />
             <Route path="/main" element={<Main />} />
-            <Route path="/detailedPage" element={<DetailedPage />} />
+            <Route path="/detailedpage" element={<DetailedPage />} />
             <Route path="/test" element={<Test />} />
             <Route path="/hyun" element={<MessageListPage />} />
             <Route path="/review" element={<ReviewPage />} />
             <Route path="/review-success" element={<ReviewSuccessPage />} />
             <Route path="/registration" element={<AnimalRegistration />} />
             <Route path="/ask" element={<AskPage />} />
-            <Route path="/myPageContent" element={<MyPageContent />} />
+            <Route path="/mypagebottom" element={<MyPageBottom />} />
+            <Route path="mypage" element={<MyPage />}/>
           </Routes>
         </main>
       </LocomotiveScrollProvider>

@@ -4,7 +4,7 @@ import axios from "axios";
 import MainItem from '../Main/MainItem';
 import Review from '../DetailedPage/Review';
 
-const MyPageContent = () => {
+const MyPageBottom = () => {
     //현재 섹션이 myPost, myChannelReviews, myLikes가 있음
     const [currentSection, setCurrentSection] = useState("posts");
     const selectiveRendering = (e) => {
@@ -85,6 +85,7 @@ const BottomStyle = styled.section`
     width: 100%;
     height: 100%;
     border-top: 1px solid #CACDD2;
+    margin-top: 101px;
 `;
 
 const Content = styled.div`
@@ -146,4 +147,4 @@ const Likes = styled.ul`
     grid-template-columns: repeat(3, 1fr);
 `;
 
-export default MyPageContent;
+export default MyPageBottom;

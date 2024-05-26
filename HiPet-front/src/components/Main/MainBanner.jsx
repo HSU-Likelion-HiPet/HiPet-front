@@ -37,7 +37,7 @@ const MainBanner = () => {
             <StyledSlider {...settings}>
                 {ar.map((e, i)=>{
                     // 여기 밑에다 이미지 넣기
-                    return <div>{e}</div>
+                    return <div key={i}>{e}</div>
                 })}
             </StyledSlider>
             <BannerIndex>
