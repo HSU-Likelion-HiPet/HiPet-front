@@ -3,20 +3,29 @@ import styled from 'styled-components';
 import { useLocation, useNavigate } from 'react-router-dom';
 import useCalcDiffDate from '../../hooks/useCalcDiffDate';
 
-const MainItem = ({ coin }) => {
+const MainItem = ({ coin, deleteTargetId, setDeleteTargetId }) => {
     const ar = ["#차분함", "#조용함", "#귀여움"];
     const navigate = useNavigate();
     const location = useLocation();
     // 여기 createAt은 데이터 값으로 수정해야함
-    const createAt = "2024-05-20";
-    const diff = useCalcDiffDate(createAt);
-    console.log(location.pathname)
-
+    const createdAt = "2024-05-20";
+    const diff = useCalcDiffDate(createdAt);
+    
     return (
         // 밑에 온클릭으로 페이지 이동
         <MainCard onClick={()=>{
             if(location.pathname === "/mypageedit"){
                 //여기다가 작성해야함
+                if(deleteTargetId.includes(coin.id)){
+                    setDeleteTargetId(deleteTargetId.filter(e=>e!==coin.id));
+                }
+                else{
+                    setDeleteTargetId([
+                        ...deleteTargetId,
+                        coin.id
+                    ])
+                }
+                // console.log(coin.id)
             }
             else{
                 navigate("/detailedPage",   {state: {coin}});
@@ -58,6 +67,7 @@ const MainCard = styled.li`
     background: ${({ theme }) => theme.mainContentCardBackGround};
     overflow: hidden;
     cursor: pointer;
+    position: relative;
     
 
     .imgWrapper{

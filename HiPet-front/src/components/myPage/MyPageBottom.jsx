@@ -3,7 +3,7 @@ import styled, { css } from 'styled-components';
 import MainItem from '../Main/MainItem';
 import Review from '../DetailedPage/Review';
 
-const MyPageBottom = ({getData}) => {
+const MyPageBottom = ({getData, deleteTargetId, setDeleteTargetId}) => {
     //현재 섹션이 myPost, myChannelReviews, myLikes가 있음
     const [currentSection, setCurrentSection] = useState("posts");
     const selectiveRendering = (e) => {
@@ -27,7 +27,7 @@ const MyPageBottom = ({getData}) => {
                         </MyPageConentTop>
                         <Posts>
                             {getData.map((e, i) => {
-                                return <MainItem key={i} coin={e} />
+                                return <MainItem key={i} coin={e} deleteTargetId={deleteTargetId} setDeleteTargetId = {setDeleteTargetId} />
                             })}
                         </Posts>
                     </>)

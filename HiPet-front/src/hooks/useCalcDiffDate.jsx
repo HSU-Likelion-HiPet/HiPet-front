@@ -1,9 +1,9 @@
 
-export default (createAt) =>{
+export default (createdAt) =>{
     const currentDate = new Date();
-    const createAtDate = new Date(createAt);
+    const createdAtDate = new Date(createdAt);
 
-    const diffDate = Math.floor((currentDate.getTime() - createAtDate.getTime()) / (1000 * 60 * 60 * 24));
+    const diffDate = Math.floor((currentDate.getTime() - createdAtDate.getTime()) / (1000 * 60 * 60 * 24));
 
     switch(true){
         case diffDate === 0:

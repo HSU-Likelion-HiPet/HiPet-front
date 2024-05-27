@@ -19,7 +19,7 @@ const Main = () => {
         e.preventDefault();
         if(e.target instanceof HTMLImageElement && postData.keyword === null){
             alert("검색어는 한 자 이상 입력해야 합니다.")
-            return
+            return;
         }
         console.log(postData);
     }
@@ -32,7 +32,6 @@ const Main = () => {
             console.log(error);
         }
     }
-    console.log(coinsData);
 
     useEffect(() => {
         fetchCoinsData();

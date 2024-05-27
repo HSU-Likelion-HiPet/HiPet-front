@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import MainHeader from '../components/Main/MainHeader';
@@ -7,12 +7,16 @@ import MyPageBottom from '../components/myPage/MyPageBottom';
 const MyPageEdit = () => {
     const location = useLocation();
     const { getData } = location.state || {};
-    
+    const [deleteTargetId, setDeleteTargetId] = useState([]);
+
+    useEffect(()=>{
+        console.log(deleteTargetId);
+    }, [deleteTargetId])
 
     return (
         <MyPageEditWrapper>
             <MainHeader />
-            <MyPageBottom getData={getData} />
+            <MyPageBottom getData={getData} deleteTargetId = {deleteTargetId} setDeleteTargetId={setDeleteTargetId} />
         </MyPageEditWrapper>
     );
 };
