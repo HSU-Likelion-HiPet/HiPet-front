@@ -15,9 +15,11 @@ const MyPageBottom = ({getData, deleteTargetId, setDeleteTargetId}) => {
 
     const location = useLocation();
 
-    useEffect(()=>{
-        setDeleteTargetId([]);
-    }, [currentSection])
+    useEffect(() => {
+        if (location.pathname === "/mypageedit") {
+            setDeleteTargetId([]);
+        }
+    }, [currentSection]);
 
     return (
         <BottomStyle>
