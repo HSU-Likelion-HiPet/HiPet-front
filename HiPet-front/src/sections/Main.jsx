@@ -32,6 +32,7 @@ const Main = () => {
             console.log(error);
         }
     }
+    console.log(coinsData);
 
     useEffect(() => {
         fetchCoinsData();

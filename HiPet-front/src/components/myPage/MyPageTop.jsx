@@ -1,7 +1,10 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
-const MyPageTop = () => {
+const MyPageTop = ({ getData }) => {
+  const navigate = useNavigate();
+
   return (
     <Container>
       <ProfileSection>
@@ -9,7 +12,9 @@ const MyPageTop = () => {
         <ProfileDetails>
           <TopRow>
             <Value>사용자 닉네임</Value>
-            <ManageButton>내 채널 관리</ManageButton>
+            <ManageButton onClick={() => navigate("/mypageedit", { state: { getData } })}>
+              내 채널 관리
+            </ManageButton>
           </TopRow>
           <Label>채널소개글</Label>
           <Description>채널 소개글 내용</Description>

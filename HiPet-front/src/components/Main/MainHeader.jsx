@@ -14,7 +14,7 @@ const MainHeader = () => {
             <ul className='nav'>
                 <li>채팅</li>
                 <li>등록하기</li>
-                <li>마이페이지</li>
+                <li onClick={()=>navigate("/mypage")}>마이페이지</li>
                 <li className='profileImgWrapper'>
                     <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/GitHub_Invertocat_Logo.svg/1200px-GitHub_Invertocat_Logo.svg.png" alt="profile" />
                 </li>

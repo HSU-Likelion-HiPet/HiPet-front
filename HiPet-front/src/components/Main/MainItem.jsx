@@ -1,20 +1,27 @@
 import React from 'react';
 import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import useCalcDiffDate from '../../hooks/useCalcDiffDate';
 
 const MainItem = ({ coin }) => {
     const ar = ["#차분함", "#조용함", "#귀여움"];
     const navigate = useNavigate();
+    const location = useLocation();
     // 여기 createAt은 데이터 값으로 수정해야함
     const createAt = "2024-05-20";
     const diff = useCalcDiffDate(createAt);
+    console.log(location.pathname)
 
     return (
         // 밑에 온클릭으로 페이지 이동
         <MainCard onClick={()=>{
-            navigate("/detailedPage", {state: {coin}});
-            window.location.reload()
+            if(location.pathname === "/mypageedit"){
+                //여기다가 작성해야함
+            }
+            else{
+                navigate("/detailedPage",   {state: {coin}});
+                window.location.reload();
+            }
         }}>
             <div className="imgWrapper">
                     <img src={coin.image} alt="" />

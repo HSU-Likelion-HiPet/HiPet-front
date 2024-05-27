@@ -13,6 +13,7 @@ import AnimalRegistration from "./sections/AnimalRegistration";
 import AskPage from "./sections/AskPage";
 import MyPageBottom from "./components/myPage/MyPageBottom";
 import MyPage from "./sections/MyPage";
+import MyPageEdit from "./sections/MyPageEdit";
 
 function App() {
   const containerRef = useRef(null);
@@ -39,6 +40,7 @@ function App() {
             <Route path="/ask" element={<AskPage />} />
             <Route path="/mypagebottom" element={<MyPageBottom />} />
             <Route path="mypage" element={<MyPage />}/>
+            <Route path = "mypageedit" element={<MyPageEdit />} />
           </Routes>
         </main>
       </LocomotiveScrollProvider>

@@ -1,29 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import styled, { css } from 'styled-components';
-import axios from "axios";
 import MainItem from '../Main/MainItem';
 import Review from '../DetailedPage/Review';
 
-const MyPageBottom = () => {
+const MyPageBottom = ({getData}) => {
     //현재 섹션이 myPost, myChannelReviews, myLikes가 있음
     const [currentSection, setCurrentSection] = useState("posts");
     const selectiveRendering = (e) => {
         setCurrentSection(e.target.dataset.type);
     }
-
-    const [data, setData] = useState([]);
-    const fetch = async () => {
-        try {
-            const response = await axios.get("https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&per_page=23&page=1&x_cg_demo_api_key=CG-AYLRnqXGz5a5gaEdoynehsnZ");
-            setData(response.data);
-        } catch (error) {
-            console.log(error);
-        }
-    }
-
-    useEffect(() => {
-        fetch();
-    }, [])
 
     return (
         <BottomStyle>
@@ -38,10 +23,10 @@ const MyPageBottom = () => {
                     (<>
                         <MyPageConentTop>
                             {/* 여기 나중에 posts.length로 바꿔야함 */}
-                            <h3>총 {data.length}개</h3>
+                            <h3>총 {getData.length}개</h3>
                         </MyPageConentTop>
                         <Posts>
-                            {data.map((e, i) => {
+                            {getData.map((e, i) => {
                                 return <MainItem key={i} coin={e} />
                             })}
                         </Posts>
@@ -52,10 +37,10 @@ const MyPageBottom = () => {
                     (<>
                         <MyPageConentTop>
                             {/* 여기 나중에 reviews.length로 바꿔야함 */}
-                            <h3>채널후기 {data.length}개</h3>
+                            <h3>채널후기 {getData.length}개</h3>
                         </MyPageConentTop>
                         <Reviews>
-                            {data.map((e, i) => {
+                            {getData.map((e, i) => {
                                 return <Review key={i} />
                             })}
                         </Reviews>
@@ -66,11 +51,11 @@ const MyPageBottom = () => {
                     (<>
                         <MyPageConentTop>
                             {/* 여기 나중에 likes.length로 바꿔야함 */}
-                            <h3>총 {data.length}개</h3>
+                            <h3>총 {getData.length}개</h3>
                         </MyPageConentTop>
                         ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ여기는 찜목록이이이이이이잉이ㅣ이이잉이임ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
                         <Likes>
-                            {data.map((e, i) => {
+                            {getData.map((e, i) => {
                                 return <MainItem key={i} coin={e} />
                             })}
                         </Likes>
