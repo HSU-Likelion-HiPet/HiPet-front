@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useLocation, useNavigate } from 'react-router-dom';
 import useCalcDiffDate from '../../hooks/useCalcDiffDate';
@@ -11,7 +11,7 @@ const MainItem = ({ coin, deleteTargetId, setDeleteTargetId }) => {
     // 여기 createAt은 데이터 값으로 수정해야함
     const createdAt = "2024-05-20";
     const diff = useCalcDiffDate(createdAt);
-    
+
     return (
         // 밑에 온클릭으로 페이지 이동
         <MainCard onClick={()=>{

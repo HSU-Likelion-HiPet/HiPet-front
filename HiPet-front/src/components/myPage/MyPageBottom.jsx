@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled, { css } from 'styled-components';
 import MainItem from '../Main/MainItem';
 import Review from '../DetailedPage/Review';
@@ -14,6 +14,10 @@ const MyPageBottom = ({getData, deleteTargetId, setDeleteTargetId}) => {
     }
 
     const location = useLocation();
+
+    useEffect(()=>{
+        setDeleteTargetId([]);
+    }, [currentSection])
 
     return (
         <BottomStyle>
@@ -31,7 +35,7 @@ const MyPageBottom = ({getData, deleteTargetId, setDeleteTargetId}) => {
                             <h3>총 {getData.length}개</h3>
                             {location.pathname==="/mypageedit" && (
                                 <div className='delete-button-wrapper'>
-                                    <div className="box">
+                                    <div className="box" onClick={()=>setDeleteTargetId([])}>
                                         <img src={deleteTargetId.length >= 1 ? YellowCheckVector : WhiteCheckVector} alt="" />
                                     </div>
                                     <DeleteBtn props={deleteTargetId.length >= 1}>선택삭제</DeleteBtn>
@@ -68,7 +72,7 @@ const MyPageBottom = ({getData, deleteTargetId, setDeleteTargetId}) => {
                             <h3>총 {getData.length}개</h3>
                             {location.pathname==="/mypageedit" && (
                                 <div className='delete-button-wrapper'>
-                                    <div className="box">
+                                    <div className="box" onClick={()=>setDeleteTargetId([])}>
                                         <img src={deleteTargetId.length >= 1 ? YellowCheckVector : WhiteCheckVector} alt="" />
                                     </div>
                                     <DeleteBtn props={deleteTargetId.length >= 1}>선택삭제</DeleteBtn>
@@ -150,6 +154,7 @@ const MyPageConentTop = styled.div`
             justify-content: center;
             align-items: center;
             margin-right: 8px;
+            cursor: pointer;
 
             img{
                 padding-top: 3px;
@@ -183,6 +188,7 @@ const DeleteBtn = styled.span`
     color: ${({props})=>props ? "#C86400" : "#9FA4A8"};
     font-size: 20px;
     font-weight: 600;
+    cursor: pointer;
 `;
 
 export default MyPageBottom;
