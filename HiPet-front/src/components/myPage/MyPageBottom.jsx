@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import styled, { css } from 'styled-components';
 import MainItem from '../Main/MainItem';
 import Review from '../DetailedPage/Review';
+import { useLocation } from 'react-router-dom';
+import WhiteCheckVector from "../../assets/checkVector-white.png";
+import YellowCheckVector from "../../assets/checkVector-yellow.png";
 
 const MyPageBottom = ({getData, deleteTargetId, setDeleteTargetId}) => {
     //현재 섹션이 myPost, myChannelReviews, myLikes가 있음
@@ -9,6 +12,8 @@ const MyPageBottom = ({getData, deleteTargetId, setDeleteTargetId}) => {
     const selectiveRendering = (e) => {
         setCurrentSection(e.target.dataset.type);
     }
+
+    const location = useLocation();
 
     return (
         <BottomStyle>
@@ -24,6 +29,14 @@ const MyPageBottom = ({getData, deleteTargetId, setDeleteTargetId}) => {
                         <MyPageConentTop>
                             {/* 여기 나중에 posts.length로 바꿔야함 */}
                             <h3>총 {getData.length}개</h3>
+                            {location.pathname==="/mypageedit" && (
+                                <div className='delete-button-wrapper'>
+                                    <div className="box">
+                                        <img src={deleteTargetId.length >= 1 ? YellowCheckVector : WhiteCheckVector} alt="" />
+                                    </div>
+                                    <DeleteBtn props={deleteTargetId.length >= 1}>선택삭제</DeleteBtn>
+                                </div>
+                            )}
                         </MyPageConentTop>
                         <Posts>
                             {getData.map((e, i) => {
@@ -38,6 +51,7 @@ const MyPageBottom = ({getData, deleteTargetId, setDeleteTargetId}) => {
                         <MyPageConentTop>
                             {/* 여기 나중에 reviews.length로 바꿔야함 */}
                             <h3>채널후기 {getData.length}개</h3>
+
                         </MyPageConentTop>
                         <Reviews>
                             {getData.map((e, i) => {
@@ -52,11 +66,19 @@ const MyPageBottom = ({getData, deleteTargetId, setDeleteTargetId}) => {
                         <MyPageConentTop>
                             {/* 여기 나중에 likes.length로 바꿔야함 */}
                             <h3>총 {getData.length}개</h3>
+                            {location.pathname==="/mypageedit" && (
+                                <div className='delete-button-wrapper'>
+                                    <div className="box">
+                                        <img src={deleteTargetId.length >= 1 ? YellowCheckVector : WhiteCheckVector} alt="" />
+                                    </div>
+                                    <DeleteBtn props={deleteTargetId.length >= 1}>선택삭제</DeleteBtn>
+                                </div>
+                            )}
                         </MyPageConentTop>
                         ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ여기는 찜목록이이이이이이잉이ㅣ이이잉이임ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
                         <Likes>
                             {getData.map((e, i) => {
-                                return <MainItem key={i} coin={e} />
+                                return <MainItem key={i} coin={e} deleteTargetId={deleteTargetId} setDeleteTargetId = {setDeleteTargetId} />
                             })}
                         </Likes>
                     </>)
@@ -107,10 +129,35 @@ const MyPageConentTop = styled.div`
     margin-bottom: 24px;
     color: #000;
     display: flex;
-    justify-content: flex-start;
+    justify-content: space-between;
+    align-items: center;
 
     h3{
         font-size: 3.2rem;
+    }
+
+    .delete-button-wrapper{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        .box{
+            width: 36px;
+            height: 36px;
+            border: 1px solid #EAEBED;
+            border-radius: 3px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 8px;
+
+            img{
+                padding-top: 3px;
+                width: 30.5px;
+                height: 25.5px;
+            }
+
+        }
     }
 `;
 
@@ -130,6 +177,12 @@ const Likes = styled.ul`
     width: 100%;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
+`;
+
+const DeleteBtn = styled.span`
+    color: ${({props})=>props ? "#C86400" : "#9FA4A8"};
+    font-size: 20px;
+    font-weight: 600;
 `;
 
 export default MyPageBottom;

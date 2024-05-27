@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { useLocation, useNavigate } from 'react-router-dom';
 import useCalcDiffDate from '../../hooks/useCalcDiffDate';
+import deleteSelected from "../../assets/checkVector-white.png";
 
 const MainItem = ({ coin, deleteTargetId, setDeleteTargetId }) => {
     const ar = ["#차분함", "#조용함", "#귀여움"];
@@ -15,7 +16,6 @@ const MainItem = ({ coin, deleteTargetId, setDeleteTargetId }) => {
         // 밑에 온클릭으로 페이지 이동
         <MainCard onClick={()=>{
             if(location.pathname === "/mypageedit"){
-                //여기다가 작성해야함
                 if(deleteTargetId.includes(coin.id)){
                     setDeleteTargetId(deleteTargetId.filter(e=>e!==coin.id));
                 }
@@ -25,7 +25,6 @@ const MainItem = ({ coin, deleteTargetId, setDeleteTargetId }) => {
                         coin.id
                     ])
                 }
-                // console.log(coin.id)
             }
             else{
                 navigate("/detailedPage",   {state: {coin}});
@@ -53,6 +52,13 @@ const MainItem = ({ coin, deleteTargetId, setDeleteTargetId }) => {
                     </div>
                 </div>
             </div>
+            {location.pathname === "/mypageedit" && (
+                <DeleteSircle isSelected = {deleteTargetId.includes(coin.id)}>
+                    {deleteTargetId.includes(coin.id) &&(
+                        <img src={deleteSelected} alt="" />
+                    )}
+                </DeleteSircle>
+            )}
         </MainCard>
     );
 };
@@ -129,6 +135,24 @@ const Tag = styled.li`
     font-size: 12px;
     padding: 4px 8px;
     margin-right: 5px;
+`;
+
+const DeleteSircle = styled.div`
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    background: ${({isSelected})=>isSelected ? "#FFC800" : "#F7F8FA"};
+    border-radius: 50%;
+    top: 20px;
+    left: 320px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    img{
+        width: 22.5px;
+        height: 16.5px;
+    }
 `;
 
 export default MainItem;
