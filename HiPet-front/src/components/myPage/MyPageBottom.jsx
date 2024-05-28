@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import styled, { css } from 'styled-components';
 import MainItem from '../Main/MainItem';
 import Review from '../DetailedPage/Review';
@@ -6,12 +6,8 @@ import { useLocation } from 'react-router-dom';
 import WhiteCheckVector from "../../assets/checkVector-white.png";
 import YellowCheckVector from "../../assets/checkVector-yellow.png";
 
-const MyPageBottom = ({getData, deleteTargetId, setDeleteTargetId, toggleModal }) => {
+const MyPageBottom = ({getData, deleteTargetId, setDeleteTargetId, toggleModal, currentSection, setCurrentSection }) => {
     //현재 섹션이 myPost, myChannelReviews, myLikes가 있음
-    const [currentSection, setCurrentSection] = useState("posts");
-    useEffect(()=>{
-        console.log(currentSection)
-    }, [currentSection])
 
     const selectiveRendering = (e) => {
         setCurrentSection(e.target.dataset.type);

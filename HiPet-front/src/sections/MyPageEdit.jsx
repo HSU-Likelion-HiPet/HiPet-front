@@ -36,6 +36,7 @@ const MyPageEdit = () => {
           fontSize: "3.2rem"
         },
       };
+    const [currentSection, setCurrentSection] = useState("posts");
     const location = useLocation();
     const { getData } = location.state || {};
     const [deleteTargetId, setDeleteTargetId] = useState([]);
@@ -61,13 +62,15 @@ const MyPageEdit = () => {
             getData={getData} 
             deleteTargetId = {deleteTargetId} 
             setDeleteTargetId={setDeleteTargetId} 
-            toggleModal={toggleModal} />
+            toggleModal={toggleModal}
+            currentSection={currentSection}
+            setCurrentSection={setCurrentSection} />
             <CustomModal
             isOpen={modalIsOpen}
             onRequestClose={toggleModal}
             style={customStyles}
             >
-                <div className='delete-message'>이 {deleteTargetId.length}개의 글을 완전히 삭제하시겠습니까?</div>
+                <div className='delete-message'>이 {deleteTargetId.length}개의 {currentSection==="posts" ? "글" : "찜"}을 완전히 삭제하시겠습니까?</div>
                 <Btns>
                     <button className='btn1' onClick={handleDelete} >삭제</button>
                     <button className='btn2' onClick={()=>setModalIsOpen(false)}>취소</button>

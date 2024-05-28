@@ -7,6 +7,7 @@ import axios from 'axios';
 
 const MyPage = () => {
     const [getData, setGetData] = useState([]);
+    const [currentSection, setCurrentSection] = useState("posts");
 
     const fetch = async () => {
         try {
@@ -25,7 +26,7 @@ const MyPage = () => {
         <MyPageWrapper>
             <MainHeader />
             <MyPageTop getData={getData} />
-            <MyPageBottom getData={getData} />
+            <MyPageBottom getData={getData} currentSection={currentSection} setCurrentSection = {setCurrentSection} />
         </MyPageWrapper>
     );
 };
