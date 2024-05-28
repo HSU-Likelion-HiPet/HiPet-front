@@ -5,9 +5,12 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import leftVector from "../../assets/mainBannerLeftVector.png";
 import rightVector from "../../assets/mainBannerRightVector.png";
+import Banner1 from "../../assets/Banner1.png";
+import Banner2 from "../../assets/Banner2.png";
 
 const MainBanner = () => {
     const [currentSlide, setCurrentSlide] = useState(0);
+    const bannerArray = [Banner1, Banner2];
 
     const ar = [1,2,3];
     const settings = {
@@ -35,13 +38,12 @@ const MainBanner = () => {
     return (
         <MainBannerWrapper>
             <StyledSlider {...settings}>
-                {ar.map((e, i)=>{
-                    // 여기 밑에다 이미지 넣기
-                    return <div key={i}>{e}</div>
+                {bannerArray.map((e, i)=>{
+                    return <img src={e} key={i} alt="bannerImg" />
                 })}
             </StyledSlider>
             <BannerIndex>
-                {currentSlide + 1}/{ar.length}    
+                {currentSlide + 1}/{bannerArray.length}    
             </BannerIndex>    
         </MainBannerWrapper>
     );
@@ -49,7 +51,7 @@ const MainBanner = () => {
 
 const MainBannerWrapper = styled.section`
     width: 100%;
-    height: 553px;
+    /* height: 553px; */
     background: ${({theme})=>theme.mainBannerBackGroundColor};
     position: relative;
     margin-top: 175px;
@@ -86,6 +88,8 @@ const PrevArrow = styled.div`
     display: flex !important;
     justify-content: center;
     align-items: center;
+    z-index: 50;
+
     img{
         width: 26px;
         height: 40px;
@@ -104,6 +108,7 @@ const NextArrow = styled.div`
     display: flex !important;
     justify-content: center;
     align-items: center;
+    z-index: 50;
 
     img{
         width: 26px;
@@ -118,6 +123,6 @@ const BannerIndex = styled.div`
     bottom: 16px;
     right: 386px;
     z-index: 888;
-`
+`;
 
 export default MainBanner;

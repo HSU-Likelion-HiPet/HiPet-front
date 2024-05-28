@@ -7,6 +7,7 @@ import axios from 'axios';
 
 const MyPage = () => {
     const [getData, setGetData] = useState([]);
+
     const fetch = async () => {
         try {
             const response = await axios.get("https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&per_page=23&page=1&x_cg_demo_api_key=CG-AYLRnqXGz5a5gaEdoynehsnZ");

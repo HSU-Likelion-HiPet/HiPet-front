@@ -6,9 +6,13 @@ import { useLocation } from 'react-router-dom';
 import WhiteCheckVector from "../../assets/checkVector-white.png";
 import YellowCheckVector from "../../assets/checkVector-yellow.png";
 
-const MyPageBottom = ({getData, deleteTargetId, setDeleteTargetId}) => {
+const MyPageBottom = ({getData, deleteTargetId, setDeleteTargetId, toggleModal }) => {
     //현재 섹션이 myPost, myChannelReviews, myLikes가 있음
     const [currentSection, setCurrentSection] = useState("posts");
+    useEffect(()=>{
+        console.log(currentSection)
+    }, [currentSection])
+
     const selectiveRendering = (e) => {
         setCurrentSection(e.target.dataset.type);
     }
@@ -40,7 +44,7 @@ const MyPageBottom = ({getData, deleteTargetId, setDeleteTargetId}) => {
                                     <div className="box" onClick={()=>setDeleteTargetId([])}>
                                         <img src={deleteTargetId.length >= 1 ? YellowCheckVector : WhiteCheckVector} alt="" />
                                     </div>
-                                    <DeleteBtn props={deleteTargetId.length >= 1}>선택삭제</DeleteBtn>
+                                    <DeleteBtn props={deleteTargetId.length >= 1} onClick={toggleModal}>선택삭제</DeleteBtn>
                                 </div>
                             )}
                         </MyPageConentTop>
@@ -77,7 +81,7 @@ const MyPageBottom = ({getData, deleteTargetId, setDeleteTargetId}) => {
                                     <div className="box" onClick={()=>setDeleteTargetId([])}>
                                         <img src={deleteTargetId.length >= 1 ? YellowCheckVector : WhiteCheckVector} alt="" />
                                     </div>
-                                    <DeleteBtn props={deleteTargetId.length >= 1}>선택삭제</DeleteBtn>
+                                    <DeleteBtn props={deleteTargetId.length >= 1} onClick={toggleModal}>선택삭제</DeleteBtn>
                                 </div>
                             )}
                         </MyPageConentTop>
