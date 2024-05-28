@@ -34,7 +34,7 @@ const LoginPageWrapper = styled.main`
     align-items: center;
 `;
 
-const LoginSection = styled.form`
+const LoginSection = styled.div`
     position: absolute;
     top: 56.5%;
     left: 50%;

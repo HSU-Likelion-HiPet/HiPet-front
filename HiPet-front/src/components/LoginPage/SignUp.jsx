@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import UserInput from './UserInput';
 import LoginPageButton from './LoginPageButton';
 import useInput from '../../hooks/useInput';
+import axios from 'axios';
 
 const SignUp = ({setIsSignUpPage}) => {
     const [username, onChangeUsername, setUsername] = useInput("");
@@ -94,8 +95,7 @@ const SignUp = ({setIsSignUpPage}) => {
         }
     }, [pw]);
 
-    const onSignUp = (e) => {
-        e.preventDefault();
+    const onSignUp = async () => {
 
         if (!username || !id || !pw) {
             alert("모든 값을 정확하게 입력해주세요");
@@ -106,10 +106,6 @@ const SignUp = ({setIsSignUpPage}) => {
             alert("사용자 이름이 형식에 맞지 않습니다");
             return;
         } else if (idError) {
-            if (isRepetition) {
-                alert("아이디 중복을 확인해주세요.");
-                return;
-            }
             alert("아이디가 형식에 맞지 않습니다");
             return;
         } else if (pwError) {
@@ -117,17 +113,21 @@ const SignUp = ({setIsSignUpPage}) => {
             return;
         }
 
-        alert("회원 가입 완료");
-        localStorage.setItem(id, JSON.stringify({ username, pw }));
+        // localStorage.setItem(id, JSON.stringify({ username, pw }));
+        try{
+            const response = await axios.post("http://3.37.129.172:8080/api/user/signUp", {
+                "loginId" : id,
+                "password" : pw,
+                "userName" : username
+            })
+            console.log(response.data);
+        }catch(e){
+            console.log(e.response);
+        }
         setIsSignUpPage(false);
         onReset();
     };
 
-    const [postData, setPostData] = useState({
-        "loginId" : id,
-        "password" : pw,
-        "userName":  username
-    })
 
     return (
         <>
