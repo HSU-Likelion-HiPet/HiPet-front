@@ -50,6 +50,7 @@ const MyPageEdit = () => {
         setModalIsOpen(!modalIsOpen);
     }
 
+    // 통신 시 삭제 기능 구현해야함
     const handleDelete = () =>{
         console.log(deleteTargetId);
         setModalIsOpen(false);
