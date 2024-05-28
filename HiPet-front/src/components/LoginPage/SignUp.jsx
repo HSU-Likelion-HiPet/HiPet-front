@@ -60,19 +60,11 @@ const SignUp = ({setIsSignUpPage}) => {
 
     useEffect(() => {
         if (validationCheck(id, inputRegexs.idReg) || id === "") {
-            if (localStorage.getItem(id)) {
-                setIsRepetition(true);
-                setErrorMessage({
-                    ...errorMessage,
-                    idError: "이미 있는 아이디입니다.",
-                });
-            } else {
-                setIsRepetition(false);
-                setErrorMessage({
-                    ...errorMessage,
-                    idError: "",
-                });
-            }
+            setIsRepetition(false);
+            setErrorMessage({
+                ...errorMessage,
+                idError: "",
+            });
         } else {
             setErrorMessage({
                 ...errorMessage,
@@ -121,11 +113,14 @@ const SignUp = ({setIsSignUpPage}) => {
                 "userName" : username
             })
             console.log(response.data);
-        }catch(e){
-            console.log(e.response);
+            setIsSignUpPage(false);
+            onReset();
+        }catch(error){
+            setErrorMessage({
+                ...errorMessage,
+                idError: error.response.data.message,
+            });
         }
-        setIsSignUpPage(false);
-        onReset();
     };
 
 
