@@ -6,12 +6,12 @@ import EmptyDataPage from './EmptyDataPage';
 import Pagination from 'react-js-pagination';
 import filterVector from "../../assets/filterVector.png";
 
-const MainContents = ({ coinsData, postData, setPostData, handleSubmit }) => {
+const MainContents = ({ animalsData, postData, setPostData, handleSubmit }) => {
     const [currentPage, setCurrentPage] = useState(1);
     const [postsPerPage, setPostPerPage] = useState(15);
     const lastPostIndex = currentPage * postsPerPage;
     const firstPostIndex = lastPostIndex - postsPerPage;
-    const currentPosts = coinsData.slice(firstPostIndex, lastPostIndex);
+    const currentPosts = animalsData.slice(firstPostIndex, lastPostIndex);
 
     const handlePageChange = (page) => {
         setCurrentPage(page);
@@ -57,7 +57,7 @@ const MainContents = ({ coinsData, postData, setPostData, handleSubmit }) => {
         <MainContentsSection>
             <Container>
                 <ContentsHeader>
-                    <h4>총 {coinsData.length}건</h4>
+                    <h4>총 {animalsData.length}건</h4>
                     {/* 나중에 수정해야함 */}
                     <FilterWrapper>
                         <Filter props="type" onClick={() => setIsOptionClicked({
@@ -137,15 +137,15 @@ const MainContents = ({ coinsData, postData, setPostData, handleSubmit }) => {
                         <button onClick={handleSubmit}>적용</button>
                     </FilterWrapper>
                 </ContentsHeader>
-                {coinsData.length > 0 ? (
+                {animalsData.length > 0 ? (
                     <ContentsWrapper>
-                        {currentPosts.map((coin, i) => {
-                            return <MainItem key={i} coin={coin} />;
+                        {currentPosts.map((animal, i) => {
+                            return <MainItem key={i} animal={animal} />;
                         })}
                         <Pagination
                             activePage={currentPage}
                             itemsCountPerPage={postsPerPage}
-                            totalItemsCount={coinsData.length - 1}
+                            totalItemsCount={animalsData.length - 1}
                             pageRangeDisplayed={5}
                             firstPageText="«"
                             lastPageText="»"

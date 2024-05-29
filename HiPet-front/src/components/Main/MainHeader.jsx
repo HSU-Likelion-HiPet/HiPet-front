@@ -2,9 +2,12 @@ import React from 'react';
 import styled from 'styled-components';
 import logo from "../../assets/HiPetLogo.png";
 import { useNavigate } from 'react-router-dom';
+import { useGetCurrentUserId, useGetUserData } from '../../apis/api';
+import userDefaultProfile from "../../assets/userDefaultProfile.png";
 
 const MainHeader = () => {
     const navigate = useNavigate();
+    const currentUserData = useGetUserData(useGetCurrentUserId());
     
     return (
         <MainHeaderStyle>
@@ -13,10 +16,12 @@ const MainHeader = () => {
             </div>
             <ul className='nav'>
                 <li>채팅</li>
-                <li>등록하기</li>
-                <li onClick={()=>navigate("/mypage")}>마이페이지</li>
+                <li onClick={()=>navigate("/registration")}>등록하기</li>
+                <li onClick={()=>navigate("/mypage", {state: {currentUserData}})}>마이페이지</li>
                 <li className='profileImgWrapper'>
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/GitHub_Invertocat_Logo.svg/1200px-GitHub_Invertocat_Logo.svg.png" alt="profile" />
+                    {currentUserData.photoFiles === undefined ? <img src={userDefaultProfile} alt="default" /> : (
+                        <img src={currentUserData.photoFiles} alt="profile" />
+                    )}
                 </li>
             </ul>
         </MainHeaderStyle>

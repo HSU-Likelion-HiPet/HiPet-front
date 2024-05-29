@@ -4,7 +4,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import useCalcDiffDate from '../../hooks/useCalcDiffDate';
 import deleteSelected from "../../assets/checkVector-white.png";
 
-const MainItem = ({ coin, deleteTargetId, setDeleteTargetId }) => {
+const MainItem = ({ animal, deleteTargetId, setDeleteTargetId }) => {
     const ar = ["#차분함", "#조용함", "#귀여움"];
     const navigate = useNavigate();
     const location = useLocation();
@@ -16,34 +16,34 @@ const MainItem = ({ coin, deleteTargetId, setDeleteTargetId }) => {
         // 밑에 온클릭으로 페이지 이동
         <MainCard onClick={()=>{
             if(location.pathname === "/mypageedit"){
-                if(deleteTargetId.includes(coin.id)){
-                    setDeleteTargetId(deleteTargetId.filter(e=>e!==coin.id));
+                if(deleteTargetId.includes(animal.id)){
+                    setDeleteTargetId(deleteTargetId.filter(e=>e!==animal.id));
                 }
                 else{
                     setDeleteTargetId([
                         ...deleteTargetId,
-                        coin.id
+                        animal.id
                     ])
                 }
             }
             else{
-                navigate("/detailedPage",   {state: {coin}});
+                navigate("/detailedPage", {state: {animal}});
                 window.location.reload();
             }
         }}>
             <div className="imgWrapper">
-                    <img src={coin.image} alt="" />
+                    <img src={animal.image} alt="" />
                 </div>
             <div className="content-info">
                 <div className="content-wrap">
-                    <h3>{coin.name}</h3>
+                    <h3>{animal.name}</h3>
                     <ul>
                         {ar.map((e, i) => {
                             return <Tag key={i}>{e}</Tag>
                         })}
                     </ul>
                     <div className='priceAndRegionInfo'>
-                        <span>{coin.current_price.toLocaleString()}원</span>
+                        <span>{animal.current_price.toLocaleString()}원</span>
                         <div>
                             <span>서울 강서구</span>
                             <span> | </span>
@@ -53,8 +53,8 @@ const MainItem = ({ coin, deleteTargetId, setDeleteTargetId }) => {
                 </div>
             </div>
             {location.pathname === "/mypageedit" && (
-                <DeleteSircle isSelected = {deleteTargetId.includes(coin.id)}>
-                    {deleteTargetId.includes(coin.id) &&(
+                <DeleteSircle isSelected = {deleteTargetId.includes(animal.id)}>
+                    {deleteTargetId.includes(animal.id) &&(
                         <img src={deleteSelected} alt="" />
                     )}
                 </DeleteSircle>

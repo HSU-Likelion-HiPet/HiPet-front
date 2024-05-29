@@ -2,8 +2,30 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
-const MyPageTop = ({ getData }) => {
+const MyPageTop = ({ userData }) => {
   const navigate = useNavigate();
+
+  const regionArray = [
+    ["전체", "_ALL"],
+    ["서울", "_SEOUL"],
+    ["경기", "_GYEONGGI"],
+    ["인천", "_INCHEON"],
+    ["대전", "_DAEJEON"],
+    ["세종", "_SEJONG"],
+    ["충남", "_CHUNGNAM"],
+    ["충북", "_CHUNGBUK"],
+    ["광주", "_GWANGJU"],
+    ["전남", "_JEONNAM"],
+    ["전북", "_JEONBUK"],
+    ["대구", "_DAEGU"],
+    ["경북", "_GYEONGBUK"],
+    ["부산", "_BUSAN"],
+    ["울산", "_ULSAN"],
+    ["경남", "_GYEONGNAM"],
+    ["강원", "_GANGWON"],
+    ["제주", "_JEJU"]
+];
+
 
   return (
     <Container>
@@ -11,16 +33,20 @@ const MyPageTop = ({ getData }) => {
         <ProfileImage />
         <ProfileDetails>
           <TopRow>
-            <Value>사용자 닉네임</Value>
-            <ManageButton onClick={() => navigate("/mypageedit", { state: { getData } })}>
+            <Value>{userData.userName}</Value>
+            <ManageButton onClick={() => navigate("/mypageedit")}>
               내 채널 관리
             </ManageButton>
           </TopRow>
           <Label>채널소개글</Label>
-          <Description>채널 소개글 내용</Description>
+          <Description props={userData.profileInfo===""}>{userData.profileInfo === "" ? "채널소개글을 설정해주세요." : userData.profileInfo } </Description>
           <FieldRow>
             <Label>거래가능지역</Label>
-            <Region>서울</Region>
+            <Region>{regionArray.map((e, i)=>{
+              if(e[1]===userData.region){
+                return e[0];
+              }
+            })}</Region>
           </FieldRow>
         </ProfileDetails>
       </ProfileSection>
@@ -68,7 +94,6 @@ const TopRow = styled.div`
 const Label = styled.div`
   font-size: 18px;
   height: 32px;
-  margin-bottom: 10px;
   font-weight: 500;
   line-height: 32.16px;
   text-align: left;
@@ -84,27 +109,26 @@ const Value = styled.div`
 const Description = styled.div`
   width: 100%;
   height: 220px;
-  padding: 10px;
+  padding: 17.5px 20.6px;
   border: 1px solid #ddd;
   border-radius: 4px;
   font-size: 14px;
   margin-bottom: 20px;
+
+  color: ${({ props }) => (props ? "#9FA4A8" : "#323232")}
+
 `;
 
 const FieldRow = styled.div`
   display: flex;
-  align-items: center;
-  margin-bottom: 20px;
 `;
 
 const Region = styled.div`
   font-size: 16px;
   background-color: #ffcc00;
-  padding: 10px 20px;
+  padding: 4px 14px;
   border-radius: 4px;
   margin-left: 10px;
-  width: 104px;
-  height: 32px;
   display: flex;
   align-items: center;
   justify-content: center;

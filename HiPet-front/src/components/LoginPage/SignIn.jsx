@@ -3,6 +3,7 @@ import LoginPageButton from './LoginPageButton';
 import useInput from '../../hooks/useInput';
 import UserInput from './UserInput';
 import { useNavigate } from 'react-router-dom';
+import { connectApi } from '../../apis/api';
 
 
 const SignIn = () => {
@@ -15,31 +16,17 @@ const SignIn = () => {
         setPw("");
     }, [setId, setPw]);
 
-    const onLogin = (e) => {
-        e.preventDefault();
-
-        if (!id || !pw) {
-            alert("모든 값을 정확하게 입력해주세요.");
-            return;
-        }
-
-        const storedId = localStorage.getItem(id);
-        if (!storedId) {
-            alert("아이디를 확인해주세요.");
-            return;
-        }
-        else {
-            const storedPassword = JSON.parse(storedId).pw;
-            if (pw !== storedPassword) {
-                alert("비밀번호를 확인해주세요.");
-                return;
-            }
-            else {
-                alert("로그인 성공!");
-                sessionStorage.setItem("currentUserId", id);
-                onReset();
-                navigate("/main");
-            }
+    const onLogin = async () =>{
+        try{
+            const response = await connectApi.post("/api/user/login", {
+                "loginId" : id,
+                "password" : pw
+            });
+            sessionStorage.setItem("currentUserId", id);
+            alert(response.data.message);
+            navigate("/main", {state: {id}});
+        }catch(e){
+            alert(e.response);
         }
     }
 

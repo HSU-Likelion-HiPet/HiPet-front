@@ -1,13 +1,28 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import MainHeader from '../components/Main/MainHeader';
 import MyPageBottom from '../components/myPage/MyPageBottom';
 import Modal from 'react-modal';
+import { connectApi } from '../apis/api';
 
 Modal.setAppElement('#wrapper');
 
 const MyPageEdit = () => {
+    const [currentUserData, setCurrentUserData] = useState(null);
+    const fetchUserData = async () => {
+        try {
+            const response = await connectApi.get(`/api/user/${sessionStorage.getItem("currentUserId")}`);
+            setCurrentUserData(response.data.data);
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    useEffect(() => {
+        fetchUserData();
+    }, []);
+
     const customStyles = {
         overlay: {
           backgroundColor: "rgba(0, 0, 0, 0.4)",
@@ -37,8 +52,6 @@ const MyPageEdit = () => {
         },
       };
     const [currentSection, setCurrentSection] = useState("posts");
-    const location = useLocation();
-    const { getData } = location.state || {};
     const [deleteTargetId, setDeleteTargetId] = useState([]);
     const [modalIsOpen, setModalIsOpen] = useState(false);
     
@@ -59,13 +72,15 @@ const MyPageEdit = () => {
     return (
         <MyPageEditWrapper>
             <MainHeader />
-            <MyPageBottom 
-            getData={getData} 
-            deleteTargetId = {deleteTargetId} 
-            setDeleteTargetId={setDeleteTargetId} 
-            toggleModal={toggleModal}
-            currentSection={currentSection}
-            setCurrentSection={setCurrentSection} />
+            {currentUserData && (
+                <MyPageBottom 
+                userData={currentUserData} 
+                deleteTargetId = {deleteTargetId} 
+                setDeleteTargetId={setDeleteTargetId} 
+                toggleModal={toggleModal}
+                currentSection={currentSection}
+                setCurrentSection={setCurrentSection} />
+            )}
             <CustomModal
             isOpen={modalIsOpen}
             onRequestClose={toggleModal}

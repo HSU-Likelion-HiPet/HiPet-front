@@ -112,14 +112,14 @@ const SignUp = ({setIsSignUpPage}) => {
                 "password" : pw,
                 "userName" : username
             })
-            console.log(response.data);
+            alert(response.data.message);
             setIsSignUpPage(false);
             onReset();
-        }catch(error){
+        }catch(e){
             setErrorMessage({
                 ...errorMessage,
-                idError: error.response.data.message,
-            });
+                idError: e.response.data.message
+            })
         }
     };
 

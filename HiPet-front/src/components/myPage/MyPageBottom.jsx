@@ -6,9 +6,8 @@ import { useLocation } from 'react-router-dom';
 import WhiteCheckVector from "../../assets/checkVector-white.png";
 import YellowCheckVector from "../../assets/checkVector-yellow.png";
 
-const MyPageBottom = ({getData, deleteTargetId, setDeleteTargetId, toggleModal, currentSection, setCurrentSection }) => {
+const MyPageBottom = ({userData, deleteTargetId, setDeleteTargetId, toggleModal, currentSection, setCurrentSection }) => {
     //현재 섹션이 myPost, myChannelReviews, myLikes가 있음
-
     const selectiveRendering = (e) => {
         setCurrentSection(e.target.dataset.type);
     }
@@ -34,7 +33,7 @@ const MyPageBottom = ({getData, deleteTargetId, setDeleteTargetId, toggleModal, 
                     (<>
                         <MyPageConentTop>
                             {/* 여기 나중에 posts.length로 바꿔야함 */}
-                            <h3>총 {getData.length}개</h3>
+                            <h3>총 {userData.animalList.length}개</h3>
                             {location.pathname==="/mypageedit" && (
                                 <div className='delete-button-wrapper'>
                                     <div className="box" onClick={()=>setDeleteTargetId([])}>
@@ -45,7 +44,7 @@ const MyPageBottom = ({getData, deleteTargetId, setDeleteTargetId, toggleModal, 
                             )}
                         </MyPageConentTop>
                         <Posts>
-                            {getData.map((e, i) => {
+                            {userData.animalList.map((e, i) => {
                                 return <MainItem key={i} coin={e} deleteTargetId={deleteTargetId} setDeleteTargetId = {setDeleteTargetId} />
                             })}
                         </Posts>
@@ -56,11 +55,11 @@ const MyPageBottom = ({getData, deleteTargetId, setDeleteTargetId, toggleModal, 
                     (<>
                         <MyPageConentTop>
                             {/* 여기 나중에 reviews.length로 바꿔야함 */}
-                            <h3>채널후기 {getData.length}개</h3>
+                            <h3>채널후기 {userData.reviewList.length}개</h3>
 
                         </MyPageConentTop>
                         <Reviews>
-                            {getData.map((e, i) => {
+                            {userData.reviewList.map((e, i) => {
                                 return <Review key={i} />
                             })}
                         </Reviews>
@@ -71,7 +70,7 @@ const MyPageBottom = ({getData, deleteTargetId, setDeleteTargetId, toggleModal, 
                     (<>
                         <MyPageConentTop>
                             {/* 여기 나중에 likes.length로 바꿔야함 */}
-                            <h3>총 {getData.length}개</h3>
+                            <h3>총 {userData.likedList.length}개</h3>
                             {location.pathname==="/mypageedit" && (
                                 <div className='delete-button-wrapper'>
                                     <div className="box" onClick={()=>setDeleteTargetId([])}>
@@ -81,9 +80,8 @@ const MyPageBottom = ({getData, deleteTargetId, setDeleteTargetId, toggleModal, 
                                 </div>
                             )}
                         </MyPageConentTop>
-                        ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ여기는 찜목록이이이이이이잉이ㅣ이이잉이임ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
                         <Likes>
-                            {getData.map((e, i) => {
+                            {userData.likedList.map((e, i) => {
                                 return <MainItem key={i} coin={e} deleteTargetId={deleteTargetId} setDeleteTargetId = {setDeleteTargetId} />
                             })}
                         </Likes>

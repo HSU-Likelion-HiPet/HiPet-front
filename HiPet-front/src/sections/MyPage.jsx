@@ -4,29 +4,34 @@ import MainHeader from '../components/Main/MainHeader';
 import MyPageTop from '../components/myPage/MyPageTop';
 import MyPageBottom from '../components/myPage/MyPageBottom';
 import axios from 'axios';
+import { connectApi, useGetCurrentUserId, useGetUserData } from '../apis/api';
 
 const MyPage = () => {
-    const [getData, setGetData] = useState([]);
     const [currentSection, setCurrentSection] = useState("posts");
+    const [currentUserData, setCurrentUserData] = useState(null);
 
-    const fetch = async () => {
+    const fetchUserData = async () => {
         try {
-            const response = await axios.get("https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&per_page=23&page=1&x_cg_demo_api_key=CG-AYLRnqXGz5a5gaEdoynehsnZ");
-            setGetData(response.data);
+            const response = await connectApi.get(`/api/user/${sessionStorage.getItem("currentUserId")}`);
+            setCurrentUserData(response.data.data);
         } catch (error) {
             console.log(error);
         }
-    }
+    };
 
     useEffect(() => {
-        fetch();
-    }, [])
+        fetchUserData();
+    }, []);
 
     return (
         <MyPageWrapper>
             <MainHeader />
-            <MyPageTop getData={getData} />
-            <MyPageBottom getData={getData} currentSection={currentSection} setCurrentSection = {setCurrentSection} />
+            {currentUserData && (
+                <>
+                <MyPageTop userData={currentUserData} />
+                <MyPageBottom userData={currentUserData} currentSection={currentSection} setCurrentSection = {setCurrentSection} />
+                </>
+            )}
         </MyPageWrapper>
     );
 };
