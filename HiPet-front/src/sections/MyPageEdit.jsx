@@ -5,23 +5,26 @@ import MainHeader from '../components/Main/MainHeader';
 import MyPageBottom from '../components/myPage/MyPageBottom';
 import Modal from 'react-modal';
 import { connectApi } from '../apis/api';
+import MyPageEditTop from '../components/myPage/MyPageEditTop';
 
 Modal.setAppElement('#wrapper');
 
 const MyPageEdit = () => {
-    const [currentUserData, setCurrentUserData] = useState(null);
-    const fetchUserData = async () => {
-        try {
-            const response = await connectApi.get(`/api/user/${sessionStorage.getItem("currentUserId")}`);
-            setCurrentUserData(response.data.data);
-        } catch (error) {
-            console.log(error);
-        }
-    };
+    const location = useLocation();
+    const userData = location.state;
+    const [currentUserData, setCurrentUserData] = useState(userData.userData);
+    // const fetchUserData = async () => {
+    //     try {
+    //         const response = await connectApi.get(`/api/user/${sessionStorage.getItem("currentUserId")}`);
+    //         setCurrentUserData(response.data.data);
+    //     } catch (error) {
+    //         console.log(error);
+    //     }
+    // };
 
-    useEffect(() => {
-        fetchUserData();
-    }, []);
+    // useEffect(() => {
+    //     fetchUserData();
+    // }, []);
 
     const customStyles = {
         overlay: {
@@ -54,8 +57,8 @@ const MyPageEdit = () => {
     const [currentSection, setCurrentSection] = useState("posts");
     const [deleteTargetId, setDeleteTargetId] = useState([]);
     const [modalIsOpen, setModalIsOpen] = useState(false);
+    const [rkfk, setrkfk] = useState(userData.userData);
     
-
     const toggleModal = () =>{
         if(deleteTargetId.length<1){
             return;
@@ -65,16 +68,28 @@ const MyPageEdit = () => {
 
     // 통신 시 삭제 기능 구현해야함
     const handleDelete = () =>{
-        console.log(deleteTargetId);
         setModalIsOpen(false);
+        if(currentSection==="posts"){
+            setrkfk({
+                ...rkfk,
+                animals: rkfk.animals.filter(animal=>!deleteTargetId.includes(animal.animalId))
+            })
+        }
+        else{
+            setrkfk({
+                ...rkfk,
+                likes: rkfk.likes.filter(like=>!deleteTargetId.includes(like.animalId))
+            })
+        }
     }
 
     return (
         <MyPageEditWrapper>
             <MainHeader />
+            <MyPageEditTop />
             {currentUserData && (
                 <MyPageBottom 
-                userData={currentUserData} 
+                userData={rkfk} 
                 deleteTargetId = {deleteTargetId} 
                 setDeleteTargetId={setDeleteTargetId} 
                 toggleModal={toggleModal}

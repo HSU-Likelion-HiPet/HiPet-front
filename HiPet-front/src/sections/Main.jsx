@@ -35,6 +35,7 @@ import img27 from "../assets/animalImgs/img27.jpg";
 import img28 from "../assets/animalImgs/img28.jpg";
 import img29 from "../assets/animalImgs/img29.jpg";
 import img30 from "../assets/animalImgs/img30.jpg";
+import userDefaultProfile from "../assets/userDefaultProfile.png";
 
 
 const Main = () => {
@@ -405,9 +406,64 @@ const Main = () => {
     const [userData, setUserData] = useState({
         "userId": "grt1022rt",
         "userName": "고양이물고기",
-        "profileInfo": "\"test\"",
-        "profilePicture": "https://hipet-bucket.s3.ap-northeast-2.amazonaws.com/f14730ff-3437-4b05-a5cc-2e85e0251f71",
-        "reviews": [],
+        "region": "_SEOUL",
+        "profileInfo": "한줄소개입니다",
+        "profilePicture": userDefaultProfile,
+        "reviews": [ // 리뷰 목록 리스트
+        { // 첫 번째 리뷰
+            "user" : { // 리뷰 작성자의 정보
+                "loginId" : 2, // 리뷰 작성자의 고유 유저 ID
+                "profileImage" : userDefaultProfile // 리뷰 작성자의 프로필사진 경로
+            },
+            "createdAt" : "2024-05-21", // 리뷰 작성일
+            "rate" : 4.7, // 평점
+            "text" : "리뷰1입니다. 리뷰1입니다. 리뷰1입니다. 리뷰1입니다. 리뷰1입니다.", // 리뷰 본문
+            "reviewImages" : [ // 리뷰에 첨부된 사진 목록 리스트
+                {
+                    "reviewImageId" : 1, // 리뷰에 첨부된 사진 고유 ID (혹시 몰라 보내드립니다. 사용하지 않으셔도 돼요 !!)
+                    "imageURL" : img1 // 리뷰에 첨부된 사진 경로
+                },                        
+                {
+                    "reviewImageId" : 2,
+                    "imageURL" : img9
+                }
+            ]
+        },
+        { // 두 번째 리뷰
+            "user" : {
+                "userId" : 3,
+                "profileImage" : userDefaultProfile
+            },
+            "createdAt" : "2024-05-24", // 리뷰 작성일
+            "rate" : 3.9,
+            "text" : "리뷰2입니다. 리뷰2입니다. 리뷰2입니다. 리뷰2입니다. 리뷰2입니다.",
+            "reviewImages" : [
+                {
+                    "reviewImageId" : 1,
+                    "imageURL" : img29
+                },                        
+                {
+                    "reviewImageId" : 2,
+                    "imageURL" : img30
+                }
+            ]
+        },
+        { // 두 번째 리뷰
+            "user" : {
+                "userId" : 4,
+                "profileImage" : userDefaultProfile
+            },
+            "createdAt" : "2024-05-15", // 리뷰 작성일
+            "rate" : 2.4,
+            "text" : "리뷰3입니다. 리뷰3입니다. 리뷰3입니다. 리뷰3입니다. 리뷰3입니다.",
+            "reviewImages" : [
+                {
+                    "reviewImageId" : 1,
+                    "imageURL" : img17
+                },                        
+            ]
+        },
+    ],
         "animals": [animalsData[10], animalsData[11], animalsData[12], animalsData[13]],
         "likes": [animalsData[1], animalsData[2], animalsData[3]]
     },)
@@ -443,7 +499,7 @@ const Main = () => {
 
     return (
         <MainPage>
-            <MainHeader />
+            <MainHeader userData={userData} setUserData={setUserData} />
             <MainBanner />
             <MainSearch handleSubmit={handleSubmit} postData={postData} setPostData={setPostData} />
             <MainContents handleSubmit={handleSubmit} postData={postData} setPostData={setPostData} animalsData={animalsData} />

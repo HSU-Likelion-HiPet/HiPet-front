@@ -33,7 +33,7 @@ const MyPageBottom = ({userData, deleteTargetId, setDeleteTargetId, toggleModal,
                     (<>
                         <MyPageConentTop>
                             {/* 여기 나중에 posts.length로 바꿔야함 */}
-                            <h3>총 {userData.animalList.length}개</h3>
+                            <h3>총 {userData.animals.length}개</h3>
                             {location.pathname==="/mypageedit" && (
                                 <div className='delete-button-wrapper'>
                                     <div className="box" onClick={()=>setDeleteTargetId([])}>
@@ -44,8 +44,8 @@ const MyPageBottom = ({userData, deleteTargetId, setDeleteTargetId, toggleModal,
                             )}
                         </MyPageConentTop>
                         <Posts>
-                            {userData.animalList.map((e, i) => {
-                                return <MainItem key={i} coin={e} deleteTargetId={deleteTargetId} setDeleteTargetId = {setDeleteTargetId} />
+                            {userData.animals.map((animal, i) => {
+                                return <MainItem key={i} animal={animal} deleteTargetId={deleteTargetId} setDeleteTargetId = {setDeleteTargetId} />
                             })}
                         </Posts>
                     </>)
@@ -55,12 +55,12 @@ const MyPageBottom = ({userData, deleteTargetId, setDeleteTargetId, toggleModal,
                     (<>
                         <MyPageConentTop>
                             {/* 여기 나중에 reviews.length로 바꿔야함 */}
-                            <h3>채널후기 {userData.reviewList.length}개</h3>
+                            <h3>채널후기 {userData.reviews.length}개</h3>
 
                         </MyPageConentTop>
                         <Reviews>
-                            {userData.reviewList.map((e, i) => {
-                                return <Review key={i} />
+                            {userData.reviews.map((review, i) => {
+                                return <Review key={i} review={review} />
                             })}
                         </Reviews>
                     </>)
@@ -70,7 +70,7 @@ const MyPageBottom = ({userData, deleteTargetId, setDeleteTargetId, toggleModal,
                     (<>
                         <MyPageConentTop>
                             {/* 여기 나중에 likes.length로 바꿔야함 */}
-                            <h3>총 {userData.likedList.length}개</h3>
+                            <h3>총 {userData.likes.length}개</h3>
                             {location.pathname==="/mypageedit" && (
                                 <div className='delete-button-wrapper'>
                                     <div className="box" onClick={()=>setDeleteTargetId([])}>
@@ -81,8 +81,8 @@ const MyPageBottom = ({userData, deleteTargetId, setDeleteTargetId, toggleModal,
                             )}
                         </MyPageConentTop>
                         <Likes>
-                            {userData.likedList.map((e, i) => {
-                                return <MainItem key={i} coin={e} deleteTargetId={deleteTargetId} setDeleteTargetId = {setDeleteTargetId} />
+                            {userData.likes.map((animal, i) => {
+                                return <MainItem key={i} animal={animal} deleteTargetId={deleteTargetId} setDeleteTargetId = {setDeleteTargetId} />
                             })}
                         </Likes>
                     </>)

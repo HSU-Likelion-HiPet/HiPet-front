@@ -1,6 +1,6 @@
 import { useRef } from "react";
-import { LocomotiveScrollProvider } from 'react-locomotive-scroll'
-import 'locomotive-scroll/dist/locomotive-scroll.css'
+import { LocomotiveScrollProvider } from "react-locomotive-scroll";
+import "locomotive-scroll/dist/locomotive-scroll.css";
 import { Routes, Route, Navigate } from "react-router-dom";
 import Main from "./sections/Main";
 import LoginPage from "./sections/LoginPage";
@@ -33,14 +33,14 @@ function App() {
             <Route path="/main" element={<Main />} />
             <Route path="/detailedpage" element={<DetailedPage />} />
             <Route path="/test" element={<Test />} />
-            <Route path="/hyun" element={<MessageListPage />} />
+            <Route path="/message" element={<MessageListPage />} />
             <Route path="/review" element={<ReviewPage />} />
             <Route path="/review-success" element={<ReviewSuccessPage />} />
             <Route path="/registration" element={<AnimalRegistration />} />
             <Route path="/ask" element={<AskPage />} />
             <Route path="/mypagebottom" element={<MyPageBottom />} />
-            <Route path="mypage" element={<MyPage />}/>
-            <Route path = "mypageedit" element={<MyPageEdit />} />
+            <Route path="mypage" element={<MyPage />} />
+            <Route path="mypageedit" element={<MyPageEdit />} />
           </Routes>
         </main>
       </LocomotiveScrollProvider>

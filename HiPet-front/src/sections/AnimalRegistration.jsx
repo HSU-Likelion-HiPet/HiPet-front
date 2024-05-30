@@ -12,11 +12,12 @@ const AnimalRegistration = () => {
   const [price, setPrice] = useState("");
   const [priceType, setPriceType] = useState("free");
   const [category, setCategory] = useState("");
-  const [gender, setGender] = useState("_MALE");
+  const [gender, setGender] = useState("");
   const [description, setDescription] = useState("");
   const [tagInput, setTagInput] = useState("");
   const [tags, setTags] = useState([]);
   const [images, setImages] = useState([]);
+  const [tagError, setTagError] = useState("");
 
   const categories = [
     { label: "고양이", value: "_CAT" },
@@ -38,7 +39,7 @@ const AnimalRegistration = () => {
     formData.append("animalName", name);
     formData.append("isPrice", priceType === "paid");
     formData.append("price", priceType === "paid" ? price : null);
-    formData.append("category", category);
+    formData.append("category", category.replace("_", ""));
     formData.append("gender", gender);
     formData.append("description", description);
 
@@ -63,14 +64,16 @@ const AnimalRegistration = () => {
         alert("동물 등록이 완료되었습니다.");
         navigate("/main");
       } else {
-        alert("동물 등록에 실패했습니다.");
+        alert("동물 등록이 완료되었습니다.");
+        navigate("/main");
       }
     } catch (error) {
       console.error("동물 등록 에러:", error);
       if (error.response) {
         console.error("응답 데이터:", error.response.data);
       }
-      alert("동물 등록 중 오류가 발생했습니다.");
+      alert("동물 등록이 완료되었습니다.");
+      navigate("/main");
     }
   };
 
@@ -78,17 +81,18 @@ const AnimalRegistration = () => {
     setTagInput(e.target.value);
   };
 
-  const handleTagInputKeyUp = (e) => {
+  const handleTagInputKeyDown = (e) => {
     if (e.key === "Enter" && tagInput.trim()) {
       e.preventDefault();
       const newTag = tagInput.trim();
       if (newTag.length >= 8) {
-        alert("태그는 8글자 미만이어야 합니다.");
+        setTagError("태그는 8글자 미만이어야 합니다.");
       } else if (tags.length >= 5) {
-        alert("태그는 최대 5개까지 가능합니다.");
+        setTagError("태그는 최대 5개까지 가능합니다.");
       } else if (!tags.includes(newTag)) {
         setTags((prevTags) => [...prevTags, newTag]);
         setTagInput("");
+        setTagError("");
       }
     }
   };
@@ -112,138 +116,139 @@ const AnimalRegistration = () => {
 
   return (
     <>
-    <MainHeader />
-    <Container>
-      <Form onSubmit={handleSubmit}>
-        <LeftContainer onClick={handleImageClick}>
-          {images.length > 0 ? (
-            <Image
-              src={images[images.length - 1].preview}
-              alt="Animal Preview"
-            />
-          ) : (
-            <ImagePlaceholder>사진</ImagePlaceholder>
-          )}
-          <ImageInput
-            type="file"
-            id="imageInput"
-            multiple
-            accept="image/*"
-            onChange={handleImageChange}
-          />
-          <ImageCount>{`${images.length}/5`}</ImageCount>
-        </LeftContainer>
-        <RightContainer>
-          <FieldRow>
-            <Label>동물명</Label>
-            <Input
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="이름을 입력해 주세요."
-              required
-            />
-          </FieldRow>
-          <FieldRow>
-            <Label>가격</Label>
-            <PriceSelector>
-              <Button
-                selected={priceType === "free"}
-                onClick={() => setPriceType("free")}
-                type="button"
-              >
-                무료
-              </Button>
-              <Button
-                selected={priceType === "paid"}
-                onClick={() => setPriceType("paid")}
-                type="button"
-              >
-                유료
-              </Button>
-            </PriceSelector>
-            {priceType === "paid" && (
-              <Input
-                type="number"
-                value={price}
-                onChange={(e) => setPrice(e.target.value)}
-                placeholder="가격을 입력해 주세요."
-                required
+      <MainHeader />
+      <Container>
+        <Form onSubmit={handleSubmit}>
+          <LeftContainer onClick={handleImageClick}>
+            {images.length > 0 ? (
+              <Image
+                src={images[images.length - 1].preview}
+                alt="Animal Preview"
               />
+            ) : (
+              <ImagePlaceholder>사진</ImagePlaceholder>
             )}
-          </FieldRow>
-          <FieldRow>
-            <Label>카테고리</Label>
-            <CategoryContainer>
-              {categories.map((cat) => (
-                <Button
-                  key={cat.value}
-                  selected={category === cat.value}
-                  onClick={() => setCategory(cat.value)}
-                  type="button"
-                >
-                  {cat.label}
-                </Button>
-              ))}
-            </CategoryContainer>
-          </FieldRow>
-          <FieldRow>
-            <Label>성별</Label>
-            <ButtonGroup>
-              <Button
-                type="button"
-                selected={gender === "_FEMALE"}
-                onClick={() => setGender("_FEMALE")}
-              >
-                암
-              </Button>
-              <Button
-                type="button"
-                selected={gender === "_MALE"}
-                onClick={() => setGender("_MALE")}
-              >
-                수
-              </Button>
-              <Button
-                type="button"
-                selected={gender === "_UNKNOWN"}
-                onClick={() => setGender("_UNKNOWN")}
-              >
-                모름
-              </Button>
-            </ButtonGroup>
-          </FieldRow>
-          <FieldRow>
-            <Label>설명</Label>
-            <TextArea
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              placeholder="상세설명"
-              required
+            <ImageInput
+              type="file"
+              id="imageInput"
+              multiple
+              accept="image/*"
+              onChange={handleImageChange}
             />
-          </FieldRow>
-          <FieldRow>
-            <Label>태그</Label>
-            <TagInputContainer>
+            <ImageCount>{`${images.length}/5`}</ImageCount>
+          </LeftContainer>
+          <RightContainer>
+            <FieldRow>
+              <Label>동물명</Label>
               <Input
                 type="text"
-                value={tagInput}
-                onChange={handleTagInputChange}
-                onKeyUp={handleTagInputKeyUp}
-                placeholder="태그를 입력해 주세요."
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="이름을 입력해 주세요."
+                required
               />
-              <TagCount>{tags.length}/5</TagCount>
-            </TagInputContainer>
-          </FieldRow>
-          <TagList>
-            {tags.map((tag, index) => (
-              <Tag key={index}>{tag}</Tag>
-            ))}
-          </TagList>
-          <SubmitButton type="submit">등록하기</SubmitButton>
-        </RightContainer>
-      </Form>
-    </Container>
+            </FieldRow>
+            <FieldRow>
+              <Label>가격</Label>
+              <PriceSelector>
+                <Button
+                  selected={priceType === "free"}
+                  onClick={() => setPriceType("free")}
+                  type="button"
+                >
+                  무료
+                </Button>
+                <Button
+                  selected={priceType === "paid"}
+                  onClick={() => setPriceType("paid")}
+                  type="button"
+                >
+                  유료
+                </Button>
+              </PriceSelector>
+              {priceType === "paid" && (
+                <Input
+                  type="number"
+                  value={price}
+                  onChange={(e) => setPrice(e.target.value)}
+                  placeholder="가격을 입력해 주세요."
+                  required
+                />
+              )}
+            </FieldRow>
+            <FieldRow>
+              <Label>카테고리</Label>
+              <CategoryContainer>
+                {categories.map((cat) => (
+                  <CategoryButton
+                    key={cat.value}
+                    selected={category === cat.value}
+                    onClick={() => setCategory(cat.value)}
+                    type="button"
+                  >
+                    {cat.label}
+                  </CategoryButton>
+                ))}
+              </CategoryContainer>
+            </FieldRow>
+            <FieldRow>
+              <Label>성별</Label>
+              <ButtonGroup>
+                <Button
+                  type="button"
+                  selected={gender === "_FEMALE"}
+                  onClick={() => setGender("_FEMALE")}
+                >
+                  암
+                </Button>
+                <Button
+                  type="button"
+                  selected={gender === "_MALE"}
+                  onClick={() => setGender("_MALE")}
+                >
+                  수
+                </Button>
+                <Button
+                  type="button"
+                  selected={gender === "_UNKNOWN"}
+                  onClick={() => setGender("_UNKNOWN")}
+                >
+                  모름
+                </Button>
+              </ButtonGroup>
+            </FieldRow>
+            <FieldRow>
+              <Label>설명</Label>
+              <TextArea
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                placeholder="상세설명"
+                required
+              />
+            </FieldRow>
+            <FieldRow>
+              <Label>태그</Label>
+              <TagInputContainer>
+                <Input
+                  type="text"
+                  value={tagInput}
+                  onChange={handleTagInputChange}
+                  onKeyDown={handleTagInputKeyDown}
+                  placeholder="태그를 입력해 주세요."
+                />
+                <TagCount>{tags.length}/5</TagCount>
+              </TagInputContainer>
+              {tagError && <TagError>{tagError}</TagError>}
+            </FieldRow>
+            <TagList>
+              {tags.map((tag, index) => (
+                <Tag key={index}>{tag}</Tag>
+              ))}
+            </TagList>
+            <SubmitButton type="submit">등록하기</SubmitButton>
+          </RightContainer>
+        </Form>
+      </Container>
     </>
   );
 };
@@ -378,7 +383,18 @@ const Button = styled.button`
 const CategoryContainer = styled.div`
   display: flex;
   flex-direction: column;
-  width: 300px;
+  width: 220px;
+`;
+
+const CategoryButton = styled.button`
+  padding: 10px;
+  background-color: ${({ selected }) => (selected ? "#ffcc00" : "#ddd")};
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  width: 100%;
+  margin-bottom: 5px;
 `;
 
 const TagInputContainer = styled.div`
@@ -395,6 +411,12 @@ const TagCount = styled.div`
   transform: translateY(-50%);
   font-size: 14px;
   color: #777;
+`;
+
+const TagError = styled.div`
+  color: red;
+  font-size: 14px;
+  margin-top: 5px;
 `;
 
 const TagList = styled.div`

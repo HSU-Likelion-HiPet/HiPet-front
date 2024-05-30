@@ -1,31 +1,10 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import useConvertRegion from '../../hooks/useConvertRegion';
 
 const MyPageTop = ({ userData }) => {
   const navigate = useNavigate();
-
-  const regionArray = [
-    ["전체", "_ALL"],
-    ["서울", "_SEOUL"],
-    ["경기", "_GYEONGGI"],
-    ["인천", "_INCHEON"],
-    ["대전", "_DAEJEON"],
-    ["세종", "_SEJONG"],
-    ["충남", "_CHUNGNAM"],
-    ["충북", "_CHUNGBUK"],
-    ["광주", "_GWANGJU"],
-    ["전남", "_JEONNAM"],
-    ["전북", "_JEONBUK"],
-    ["대구", "_DAEGU"],
-    ["경북", "_GYEONGBUK"],
-    ["부산", "_BUSAN"],
-    ["울산", "_ULSAN"],
-    ["경남", "_GYEONGNAM"],
-    ["강원", "_GANGWON"],
-    ["제주", "_JEJU"]
-];
-
 
   return (
     <Container>
@@ -34,7 +13,7 @@ const MyPageTop = ({ userData }) => {
         <ProfileDetails>
           <TopRow>
             <Value>{userData.userName}</Value>
-            <ManageButton onClick={() => navigate("/mypageedit")}>
+            <ManageButton onClick={() => navigate("/mypageedit", {state: {userData}})}>
               내 채널 관리
             </ManageButton>
           </TopRow>
@@ -42,11 +21,7 @@ const MyPageTop = ({ userData }) => {
           <Description props={userData.profileInfo===""}>{userData.profileInfo === "" ? "채널소개글을 설정해주세요." : userData.profileInfo } </Description>
           <FieldRow>
             <Label>거래가능지역</Label>
-            <Region>{regionArray.map((e, i)=>{
-              if(e[1]===userData.region){
-                return e[0];
-              }
-            })}</Region>
+            <Region>{useConvertRegion(userData.region)}</Region>
           </FieldRow>
         </ProfileDetails>
       </ProfileSection>

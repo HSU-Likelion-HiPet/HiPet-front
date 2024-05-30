@@ -15,13 +15,13 @@ const MainItem = ({ animal, deleteTargetId, setDeleteTargetId }) => {
         // 밑에 온클릭으로 페이지 이동
         <MainCard onClick={()=>{
             if(location.pathname === "/mypageedit"){
-                if(deleteTargetId.includes(animal.id)){
-                    setDeleteTargetId(deleteTargetId.filter(e=>e!==animal.id));
+                if(deleteTargetId.includes(animal.animalId)){
+                    setDeleteTargetId(deleteTargetId.filter(e=>e!==animal.animalId));
                 }
                 else{
                     setDeleteTargetId([
                         ...deleteTargetId,
-                        animal.id
+                        animal.animalId
                     ])
                 }
             }
@@ -52,8 +52,8 @@ const MainItem = ({ animal, deleteTargetId, setDeleteTargetId }) => {
                 </div>
             </div>
             {location.pathname === "/mypageedit" && (
-                <DeleteSircle isSelected = {deleteTargetId.includes(animal.id)}>
-                    {deleteTargetId.includes(animal.id) &&(
+                <DeleteSircle isSelected = {deleteTargetId.includes(animal.animalId)}>
+                    {deleteTargetId.includes(animal.animalId) &&(
                         <img src={deleteSelected} alt="" />
                     )}
                 </DeleteSircle>
