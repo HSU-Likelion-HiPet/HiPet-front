@@ -3,18 +3,18 @@ import styled from 'styled-components';
 import ChannelInfo from './ChannelInfo';
 import ChannelReview from './ChannelReview';
 
-const SellerInfo = () => {
+const SellerInfo = ({detailData}) => {
     const [isSelected, setSelect] = useState(true);
     const [rating, setRating] = useState(3.7);
     const [reviews, setReviews] = useState(60);
-
+    
     return (
         <SellerInfoWrapper>
             <SelectBtns className='wrap'>
                 <StyledButton isSelected={isSelected} onClick={() => setSelect(true)}>채널정보</StyledButton>
                 <StyledButton isSelected={!isSelected} onClick={() => setSelect(false)}>입양후기</StyledButton>
             </SelectBtns>
-            {isSelected ? <ChannelInfo isSelected={isSelected} rating={rating} reviews={reviews} /> : <ChannelReview isSelected={isSelected} rating={rating} reviews={reviews} />}
+            {isSelected ? <ChannelInfo isSelected={isSelected} detailData={detailData} /> : <ChannelReview isSelected={isSelected} detailData={detailData} />}
         </SellerInfoWrapper>
     );
 };

@@ -7,13 +7,12 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import useCalcDiffDate from '../../hooks/useCalcDiffDate';
+import useConvertRegion from "../../hooks/useConvertRegion";
 
-const ProductInfo = ({data}) => {
-    const ar = ["#차분함", "#조용함", "#귀여움"];
-    const createAt = "2024-05-22T19:34:56";
+const ProductInfo = ({data, detailData}) => {
 
-    const diffDate = useCalcDiffDate(createAt);
-    const imgAr = [1,2,3,4,5];
+    const diffDate = useCalcDiffDate(data.createdAt);
+    const imgAr = [1]
     const settings = {
         dots: imgAr.length >= 2,
         infinite: true,
@@ -39,7 +38,7 @@ const ProductInfo = ({data}) => {
                 left: "50%",
                 transform: "translate(-50%, 0)",
                 width: "fit-content",
-                height: "fit-content"
+                height: "fit-content",
               }}
             >
               <ul style={{display: "flex"}}> {dots} </ul>
@@ -63,35 +62,33 @@ const ProductInfo = ({data}) => {
             </div> */}
             <div className="infoContainer">
                 <StyledSlider {...settings}>
-                    {imgAr.map((img,i)=>{
-                        return <CustomImage key={i} src={emptyHeart} />
-                    })}
+                    <img src={data.image} alt="" />
                 </StyledSlider>
                 <div className="info">
                     <h2 className='title-and-category'>
                         <span className='title'>
-                            {data.name}
+                            {data.animalName}
                         </span>
                         <span className='category'>
                             포유류
                         </span>
                     </h2>
                     <span className='price'>
-                        {data.current_price.toLocaleString()}원
+                        {data.price}원
                     </span>
                     <span className='uploadDate'>
                         {diffDate}
                     </span>
                     <span className="line"></span>
                     <span className='preferred-area'>거래희망지역</span>
-                    <span className='area'>서울 강서구</span>
+                    <span className='area'>{useConvertRegion(data.region)}</span>
                     <div className="comment">
                         <span>상세정보</span>
-                        <div>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Amet, eaque odit. Autem accusamus praesentium consectetur assumenda. Accusantium et non excepturi harum nulla illum velit? Cumque omnis modi totam ex esse.</div>
+                        <div>{detailData.animal.info}</div>
                     </div>
                     <ul>
-                        {ar.map((e, i)=>{
-                            return <Tag key={i}>{e}</Tag>
+                        {data.hashtag.map((tag, i)=>{
+                            return <Tag key={i}>{tag.keyword}</Tag>
                         })}
                     </ul>
                     <div className="btns">
@@ -182,7 +179,7 @@ const ProductInfoWrapper = styled.section`
             }
 
             .comment{
-                width: 100%;
+                min-width: 579.5px;
                 height: fit-content;
 
                 span{

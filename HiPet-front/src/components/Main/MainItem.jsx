@@ -3,14 +3,13 @@ import styled from 'styled-components';
 import { useLocation, useNavigate } from 'react-router-dom';
 import useCalcDiffDate from '../../hooks/useCalcDiffDate';
 import deleteSelected from "../../assets/checkVector-white.png";
+import useConvertRegion from '../../hooks/useConvertRegion';
 
 const MainItem = ({ animal, deleteTargetId, setDeleteTargetId }) => {
-    const ar = ["#차분함", "#조용함", "#귀여움"];
     const navigate = useNavigate();
     const location = useLocation();
     // 여기 createAt은 데이터 값으로 수정해야함
-    const createdAt = "2024-05-20";
-    const diff = useCalcDiffDate(createdAt);
+    const diff = useCalcDiffDate(animal.createdAt);
 
     return (
         // 밑에 온클릭으로 페이지 이동
@@ -36,16 +35,16 @@ const MainItem = ({ animal, deleteTargetId, setDeleteTargetId }) => {
                 </div>
             <div className="content-info">
                 <div className="content-wrap">
-                    <h3>{animal.name}</h3>
+                    <h3>{animal.animalName}</h3>
                     <ul>
-                        {ar.map((e, i) => {
-                            return <Tag key={i}>{e}</Tag>
+                        {animal.hashtag.map((tag, i) => {
+                            return <Tag key={i}>{tag.keyword}</Tag>
                         })}
                     </ul>
                     <div className='priceAndRegionInfo'>
-                        <span>{animal.current_price.toLocaleString()}원</span>
+                        <span>{animal.price}원</span>
                         <div>
-                            <span>서울 강서구</span>
+                            <span>{useConvertRegion(animal.region)}</span>
                             <span> | </span>
                             <span>{diff}</span>
                         </div>
@@ -118,7 +117,7 @@ const MainCard = styled.li`
 
                 > div{
                     font-size: 12px;
-                    width: 100px;
+                    width: 65px;
                     display: flex;
                     justify-content: space-between;
                     align-items: flex-end;
