@@ -28,7 +28,8 @@ const Footer = () => {
 export default Footer;
 
 const FooterContainer = styled.div`
-  width: 1920px;
+  width: 100%;
+  max-width: 1920px;
   height: 300px;
   background: #f7f8fa;
 

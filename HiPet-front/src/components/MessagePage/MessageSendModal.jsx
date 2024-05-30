@@ -1,18 +1,29 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 
-const MessageSendModal = ({ onClose }) => {
+const MessageSendModal = ({ receiverId, onClose, onSendMessage }) => {
+  const [message, setMessage] = useState("");
+
+  const handleSendClick = () => {
+    if (message.trim()) {
+      onSendMessage(receiverId, message);
+      setMessage("");
+    } else {
+      alert("메세지를 입력해주세요.");
+    }
+  };
+
   return (
     <ModalOverlay>
       <ModalContent>
-        <ModalHeader>
-          <ModalTitle>쪽지 보내기</ModalTitle>
-          <CloseButton onClick={onClose}>&times;</CloseButton>
-        </ModalHeader>
-        <ModalBody>
-          <TextArea placeholder="내용을 입력해 주세요." />
-          <SendButton>전송</SendButton>
-        </ModalBody>
+        <CloseButton onClick={onClose}>X</CloseButton>
+        <Title>메세지 보내기</Title>
+        <MessageInput
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+          placeholder="메세지를 입력하세요."
+        />
+        <SendButton onClick={handleSendClick}>보내기</SendButton>
       </ModalContent>
     </ModalOverlay>
   );
@@ -30,60 +41,52 @@ const ModalOverlay = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: 1000;
 `;
 
 const ModalContent = styled.div`
-  background: white;
+  background-color: white;
   padding: 20px;
-  border-radius: 8px;
-  width: 500px;
-  max-width: 90%;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-`;
-
-const ModalHeader = styled.div`
+  border-radius: 10px;
+  width: 400px;
+  position: relative;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-bottom: 1px solid #ddd;
-  padding-bottom: 10px;
-  margin-bottom: 20px;
-`;
-
-const ModalTitle = styled.h2`
-  font-size: 20px;
-  margin: 0;
+  flex-direction: column;
 `;
 
 const CloseButton = styled.button`
+  position: absolute;
+  top: 10px;
+  right: 10px;
   background: none;
   border: none;
-  font-size: 24px;
+  font-size: 16px;
   cursor: pointer;
 `;
 
-const ModalBody = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+const Title = styled.h2`
+  margin: 0;
+  margin-bottom: 20px;
 `;
 
-const TextArea = styled.textarea`
-  width: 100%;
-  height: 100px;
+const MessageInput = styled.textarea`
+  flex: 1;
+  resize: none;
   padding: 10px;
   border: 1px solid #ddd;
-  border-radius: 4px;
-  resize: none;
+  border-radius: 5px;
+  font-size: 16px;
+  margin-bottom: 20px;
 `;
 
 const SendButton = styled.button`
-  align-self: flex-end;
-  padding: 10px 20px;
+  padding: 10px;
   background-color: #ffcc00;
   border: none;
-  border-radius: 4px;
+  border-radius: 5px;
   cursor: pointer;
   font-size: 16px;
-  color: white;
+  &:hover {
+    background-color: #ffb700;
+  }
 `;

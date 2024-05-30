@@ -1,36 +1,76 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import MainHeader from "../components/Main/MainHeader";
-import MainFooter from "../components/Main/MainFooter";
+import { useNavigate } from "react-router-dom";
+import { connectApi, useGetCurrentUserId } from "../api/api";
 
 const AnimalRegistration = () => {
+  const navigate = useNavigate();
+  const userId = useGetCurrentUserId();
+
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
   const [priceType, setPriceType] = useState("free");
   const [category, setCategory] = useState("");
-  const [gender, setGender] = useState("암");
+  const [gender, setGender] = useState("_MALE");
   const [description, setDescription] = useState("");
   const [tagInput, setTagInput] = useState("");
   const [tags, setTags] = useState([]);
   const [images, setImages] = useState([]);
-  const categories = ["포유류", "파충류", "양서류", "조류", "어류"];
 
-  const handleSubmit = (e) => {
+  const categories = [
+    { label: "고양이", value: "_CAT" },
+    { label: "강아지", value: "_DOG" },
+    { label: "물고기", value: "_FISH" },
+    { label: "새", value: "_BIRD" },
+    { label: "파충류", value: "_REPTILE" },
+  ];
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!category) {
       alert("카테고리를 선택해주세요.");
       return;
     }
-    const formData = {
-      name,
-      price: priceType === "paid" ? price : "무료",
-      category,
-      gender,
-      description,
-      tags,
-      images: images.map((image) => image.file),
-    };
-    console.log(formData);
+
+    const formData = new FormData();
+    formData.append("loginId", userId);
+    formData.append("animalName", name);
+    formData.append("isPrice", priceType === "paid");
+    formData.append("price", priceType === "paid" ? price : null);
+    formData.append("category", category);
+    formData.append("gender", gender);
+    formData.append("description", description);
+
+    // 해시태그 배열을 JSON 문자열로 변환하여 전송
+    formData.append("hashtag", JSON.stringify(tags));
+
+    images.forEach((image) => formData.append("photoFiles", image.file));
+
+    // 데이터 확인을 위해 콘솔에 출력
+    console.log("FormData Entries:");
+    for (let pair of formData.entries()) {
+      console.log(`${pair[0]}: ${pair[1]}`);
+    }
+
+    try {
+      const response = await connectApi.post("api/animal/hipet", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      if (response.data.success) {
+        alert("동물 등록이 완료되었습니다.");
+        navigate("/main");
+      } else {
+        alert("동물 등록에 실패했습니다.");
+      }
+    } catch (error) {
+      console.error("동물 등록 에러:", error);
+      if (error.response) {
+        console.error("응답 데이터:", error.response.data);
+      }
+      alert("동물 등록 중 오류가 발생했습니다.");
+    }
   };
 
   const handleTagInputChange = (e) => {
@@ -54,14 +94,14 @@ const AnimalRegistration = () => {
 
   const handleImageChange = (e) => {
     const files = Array.from(e.target.files);
-    if (files.length + images.length <= 12) {
+    if (files.length + images.length <= 5) {
       const newImages = files.map((file) => ({
         file,
         preview: URL.createObjectURL(file),
       }));
       setImages([...images, ...newImages]);
     } else {
-      alert("최대 12개의 이미지만 첨부할 수 있습니다.");
+      alert("최대 5개의 이미지만 첨부할 수 있습니다.");
     }
   };
 
@@ -70,134 +110,137 @@ const AnimalRegistration = () => {
   };
 
   return (
-    <>
-      <MainHeader />
-      <Container>
-        <Form onSubmit={handleSubmit}>
-          <LeftContainer onClick={handleImageClick}>
-            {images.length > 0 ? (
-              <Image
-                src={images[images.length - 1].preview}
-                alt="Animal Preview"
-              />
-            ) : (
-              <ImagePlaceholder>사진</ImagePlaceholder>
-            )}
-            <ImageInput
-              type="file"
-              id="imageInput"
-              multiple
-              accept="image/*"
-              onChange={handleImageChange}
+    <Container>
+      <Form onSubmit={handleSubmit}>
+        <LeftContainer onClick={handleImageClick}>
+          {images.length > 0 ? (
+            <Image
+              src={images[images.length - 1].preview}
+              alt="Animal Preview"
             />
-            <ImageCount>{`${images.length}/12`}</ImageCount>
-          </LeftContainer>
-          <RightContainer>
-            <FieldRow>
-              <Label>동물명</Label>
+          ) : (
+            <ImagePlaceholder>사진</ImagePlaceholder>
+          )}
+          <ImageInput
+            type="file"
+            id="imageInput"
+            multiple
+            accept="image/*"
+            onChange={handleImageChange}
+          />
+          <ImageCount>{`${images.length}/5`}</ImageCount>
+        </LeftContainer>
+        <RightContainer>
+          <FieldRow>
+            <Label>동물명</Label>
+            <Input
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="이름을 입력해 주세요."
+              required
+            />
+          </FieldRow>
+          <FieldRow>
+            <Label>가격</Label>
+            <PriceSelector>
+              <Button
+                selected={priceType === "free"}
+                onClick={() => setPriceType("free")}
+                type="button"
+              >
+                무료
+              </Button>
+              <Button
+                selected={priceType === "paid"}
+                onClick={() => setPriceType("paid")}
+                type="button"
+              >
+                유료
+              </Button>
+            </PriceSelector>
+            {priceType === "paid" && (
+              <Input
+                type="number"
+                value={price}
+                onChange={(e) => setPrice(e.target.value)}
+                placeholder="가격을 입력해 주세요."
+                required
+              />
+            )}
+          </FieldRow>
+          <FieldRow>
+            <Label>카테고리</Label>
+            <CategoryContainer>
+              {categories.map((cat) => (
+                <Button
+                  key={cat.value}
+                  selected={category === cat.value}
+                  onClick={() => setCategory(cat.value)}
+                  type="button"
+                >
+                  {cat.label}
+                </Button>
+              ))}
+            </CategoryContainer>
+          </FieldRow>
+          <FieldRow>
+            <Label>성별</Label>
+            <ButtonGroup>
+              <Button
+                type="button"
+                selected={gender === "_FEMALE"}
+                onClick={() => setGender("_FEMALE")}
+              >
+                암
+              </Button>
+              <Button
+                type="button"
+                selected={gender === "_MALE"}
+                onClick={() => setGender("_MALE")}
+              >
+                수
+              </Button>
+              <Button
+                type="button"
+                selected={gender === "_UNKNOWN"}
+                onClick={() => setGender("_UNKNOWN")}
+              >
+                모름
+              </Button>
+            </ButtonGroup>
+          </FieldRow>
+          <FieldRow>
+            <Label>설명</Label>
+            <TextArea
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="상세설명"
+              required
+            />
+          </FieldRow>
+          <FieldRow>
+            <Label>태그</Label>
+            <TagInputContainer>
               <Input
                 type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder="이름을 입력해 주세요."
-                required
+                value={tagInput}
+                onChange={handleTagInputChange}
+                onKeyUp={handleTagInputKeyUp}
+                placeholder="태그를 입력해 주세요."
               />
-            </FieldRow>
-            <FieldRow>
-              <Label>가격</Label>
-              <PriceSelector>
-                <Button
-                  selected={priceType === "free"}
-                  onClick={() => setPriceType("free")}
-                  type="button"
-                >
-                  무료
-                </Button>
-                <Button
-                  selected={priceType === "paid"}
-                  onClick={() => setPriceType("paid")}
-                  type="button"
-                >
-                  유료
-                </Button>
-                {priceType === "paid" && (
-                  <Input
-                    type="number"
-                    value={price}
-                    onChange={(e) => setPrice(e.target.value)}
-                    placeholder="가격 입력"
-                    required
-                  />
-                )}
-              </PriceSelector>
-            </FieldRow>
-            <FieldRow>
-              <Label>카테고리</Label>
-              <CategoryContainer>
-                {categories.map((cat) => (
-                  <CategoryButton
-                    key={cat}
-                    selected={category === cat}
-                    onClick={() => setCategory(cat)}
-                    type="button"
-                  >
-                    {cat}
-                  </CategoryButton>
-                ))}
-              </CategoryContainer>
-            </FieldRow>
-            <FieldRow>
-              <Label>성별</Label>
-              <ButtonGroup>
-                <Button
-                  type="button"
-                  selected={gender === "암"}
-                  onClick={() => setGender("암")}
-                >
-                  암
-                </Button>
-                <Button
-                  type="button"
-                  selected={gender === "수"}
-                  onClick={() => setGender("수")}
-                >
-                  수
-                </Button>
-              </ButtonGroup>
-            </FieldRow>
-            <FieldRow>
-              <Label>상세설명</Label>
-              <TextArea
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                placeholder="상세설명"
-                required
-              />
-            </FieldRow>
-            <FieldRow>
-              <Label>태그</Label>
-              <TagInputContainer>
-                <Input
-                  type="text"
-                  value={tagInput}
-                  onChange={handleTagInputChange}
-                  onKeyUp={handleTagInputKeyUp}
-                  placeholder="태그를 입력해 주세요."
-                />
-                <TagCount>{tags.length}/5</TagCount>
-              </TagInputContainer>
-            </FieldRow>
-            <TagList>
-              {tags.map((tag, index) => (
-                <Tag key={index}>{tag}</Tag>
-              ))}
-            </TagList>
-            <SubmitButton type="submit">등록하기</SubmitButton>
-          </RightContainer>
-        </Form>
-      </Container>
-      <MainFooter />
-    </>
+              <TagCount>{tags.length}/5</TagCount>
+            </TagInputContainer>
+          </FieldRow>
+          <TagList>
+            {tags.map((tag, index) => (
+              <Tag key={index}>{tag}</Tag>
+            ))}
+          </TagList>
+          <SubmitButton type="submit">등록하기</SubmitButton>
+        </RightContainer>
+      </Form>
+    </Container>
   );
 };
 
@@ -243,8 +286,20 @@ const ImagePlaceholder = styled.div`
   justify-content: center;
   align-items: center;
   font-size: 18px;
-  color: #aaa;
+  color: #777;
   border-radius: 4px;
+`;
+
+const ImageInput = styled.input`
+  display: none;
+`;
+
+const ImageCount = styled.div`
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  font-size: 14px;
+  color: #777;
 `;
 
 const Image = styled.img`
@@ -316,12 +371,6 @@ const Button = styled.button`
   }
 `;
 
-const CategoryButton = styled(Button)`
-  background-color: ${({ selected }) => (selected ? "#ffcc00" : "#f0f0f0")};
-  width: 100%;
-  margin-bottom: 0px;
-`;
-
 const CategoryContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -373,16 +422,4 @@ const SubmitButton = styled.button`
   &:hover {
     background-color: #ffb700;
   }
-`;
-
-const ImageInput = styled.input`
-  display: none;
-`;
-
-const ImageCount = styled.div`
-  position: absolute;
-  right: 10px;
-  bottom: 10px;
-  font-size: 14px;
-  color: #777;
 `;

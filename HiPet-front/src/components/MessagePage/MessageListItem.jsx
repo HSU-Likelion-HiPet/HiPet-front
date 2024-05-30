@@ -1,19 +1,16 @@
 import React from "react";
 import styled from "styled-components";
 
-const MessageListItem = ({ message, isSelected, onSelectMessage }) => {
+const MessageListItem = ({ message, onClick }) => {
   return (
-    <ItemContainer
-      isSelected={isSelected}
-      onClick={() => onSelectMessage(message)}
-    >
+    <ItemContainer onClick={onClick}>
       <ItemHeader>
-        <ItemName>{message.name}</ItemName>
+        <ItemName>{message.senderId}</ItemName>
+        <ItemTimestamp>
+          {new Date(message.sendAt).toLocaleString()}
+        </ItemTimestamp>
       </ItemHeader>
-      <ItemContentRow>
-        <ItemContent>{message.content}</ItemContent>
-        <ItemTime>{message.time}</ItemTime>
-      </ItemContentRow>
+      <ItemContent>{message.text}</ItemContent>
     </ItemContainer>
   );
 };
@@ -21,39 +18,32 @@ const MessageListItem = ({ message, isSelected, onSelectMessage }) => {
 export default MessageListItem;
 
 const ItemContainer = styled.div`
-  display: flex;
-  flex-direction: column;
   padding: 15px;
+  background-color: white;
   border-bottom: 1px solid #ddd;
   cursor: pointer;
-  background-color: ${(props) => (props.isSelected ? "#fdf7e1" : "white")};
+
   &:hover {
-    background-color: #f0f0f0;
+    background-color: #f5f5f5;
   }
 `;
 
 const ItemHeader = styled.div`
   display: flex;
   justify-content: space-between;
+  margin-bottom: 10px;
 `;
 
-const ItemName = styled.div`
-  font-size: 12px;
+const ItemName = styled.span`
   font-weight: bold;
 `;
 
-const ItemContentRow = styled.div`
-  display: flex;
-  justify-content: space-between;
-  margin-top: 5px;
+const ItemTimestamp = styled.span`
+  font-size: 12px;
+  color: #777;
 `;
 
-const ItemContent = styled.div`
-  font-size: 10px;
-  color: #aaa;
-`;
-
-const ItemTime = styled.div`
-  font-size: 10px;
-  color: #aaa;
+const ItemContent = styled.p`
+  margin: 0;
+  color: #555;
 `;

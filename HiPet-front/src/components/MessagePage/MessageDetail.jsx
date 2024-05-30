@@ -1,23 +1,29 @@
 import React from "react";
 import styled from "styled-components";
-import MessageSend from "../../assets/MessageSend.png";
+import MessageSendIcon from "../../assets/MessageSend.png";
 
-const MessageDetail = ({ message, onSendClick }) => {
+const MessageDetail = ({ messages, partnerId, onSendClick }) => {
   return (
     <DetailContainer>
-      {message ? (
-        <>
-          <MessageHeader>
-            <MessageName>{message.name}</MessageName>
-            <SendButton onClick={onSendClick}>
-              <SendIcon src={MessageSend} alt="Send" />
-            </SendButton>
-          </MessageHeader>
-          <MessageContent>{message.content}</MessageContent>
-        </>
-      ) : (
-        <Placeholder>쪽지를 선택해 주세요</Placeholder>
-      )}
+      <MessageHeader>
+        <MessageName>{partnerId}</MessageName>
+        <SendButton onClick={onSendClick}>
+          <SendIcon src={MessageSendIcon} alt="Send" />
+        </SendButton>
+      </MessageHeader>
+      <MessagesContainer>
+        {messages.map((msg, index) => (
+          <MessageItem key={index}>
+            <MessageType>
+              {msg.senderId === partnerId ? "받은쪽지" : "보낸쪽지"}
+            </MessageType>
+            <MessageContent>{msg.text}</MessageContent>
+            <MessageTimestamp>
+              {new Date(msg.sendAt).toLocaleString()}
+            </MessageTimestamp>
+          </MessageItem>
+        ))}
+      </MessagesContainer>
     </DetailContainer>
   );
 };
@@ -54,13 +60,35 @@ const SendIcon = styled.img`
   height: 24px;
 `;
 
+const MessagesContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 20px;
+`;
+
+const MessageItem = styled.div`
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  border-radius: 5px;
+`;
+
+const MessageType = styled.div`
+  font-size: 14px;
+  font-weight: bold;
+  color: #333;
+`;
+
 const MessageContent = styled.div`
-  padding: 20px 0;
+  font-size: 16px;
+  margin-top: 5px;
   color: #555;
 `;
 
-const Placeholder = styled.div`
-  padding: 20px 0;
+const MessageTimestamp = styled.div`
+  font-size: 12px;
   color: #aaa;
-  text-align: center;
+  margin-top: 10px;
+  text-align: right;
 `;

@@ -2,17 +2,18 @@ import React from "react";
 import styled from "styled-components";
 import MessageListItem from "./MessageListItem";
 
-const MessageList = ({ messages, selectedMessageId, onSelectMessage }) => {
+const MessageList = ({ messages, onSelectMessage }) => {
+  const latestMessage = messages[messages.length - 1];
+
   return (
     <ListContainer>
-      {messages.map((message) => (
+      {latestMessage && (
         <MessageListItem
-          key={message.id}
-          message={message}
-          isSelected={message.id === selectedMessageId}
-          onSelectMessage={onSelectMessage}
+          key={latestMessage.id}
+          message={latestMessage}
+          onClick={() => onSelectMessage(messages)}
         />
-      ))}
+      )}
     </ListContainer>
   );
 };

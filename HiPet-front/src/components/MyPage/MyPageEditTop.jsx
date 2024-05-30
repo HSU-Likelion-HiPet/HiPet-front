@@ -96,7 +96,7 @@ const ProfileImageContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-right: 30px; 
+  margin-right: 30px;
 `;
 
 const ProfileImage = styled.div`
@@ -135,6 +135,7 @@ const Input = styled.input`
   border-radius: 4px;
   font-size: 14px;
   margin-right: 20px;
+  background: #f7f8fa;
 `;
 
 const TextArea = styled.textarea`
@@ -146,13 +147,14 @@ const TextArea = styled.textarea`
   font-size: 14px;
   resize: none;
   margin-bottom: 20px;
+  background: #f7f8fa;
 `;
 
 const RegionContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
-  gap: 15px; 
-  margin-left: 0; 
+  gap: 15px;
+  margin-left: 0;
 `;
 
 const RegionButton = styled.button`
@@ -161,8 +163,8 @@ const RegionButton = styled.button`
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  flex: 1 1 calc(25% - 30px); 
-  max-width: calc(25% - 30px); 
+  flex: 1 1 calc(25% - 30px);
+  max-width: calc(25% - 30px);
 `;
 
 const ManageButton = styled.button`

@@ -1,97 +1,39 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import MessageList from "../components/MessagePage/MessageList";
 import MainHeader from "../components/Main/MainHeader";
 import MessageDetail from "../components/MessagePage/MessageDetail";
 import MessageSendModal from "../components/MessagePage/MessageSendModal";
-
-const messages = [
-  {
-    id: 1,
-    name: "동물이름1",
-    content: "내용내용내용1",
-    time: "3/28 10:00",
-  },
-  {
-    id: 2,
-    name: "동물이름2",
-    content: "내용내용내용2",
-    time: "3/28 10:00",
-  },
-  {
-    id: 3,
-    name: "동물이름3",
-    content: "내용내용내용3",
-    time: "3/28 10:00",
-  },
-  {
-    id: 4,
-    name: "동물이름4",
-    content: "내용내용내용4",
-    time: "3/28 10:00",
-  },
-  {
-    id: 5,
-    name: "동물이름1",
-    content: "내용내용내용1",
-    time: "3/28 10:00",
-  },
-  {
-    id: 6,
-    name: "동물이름1",
-    content: "내용내용내용1",
-    time: "3/28 10:00",
-  },
-  {
-    id: 7,
-    name: "동물이름1",
-    content: "내용내용내용1",
-    time: "3/28 10:00",
-  },
-  {
-    id: 8,
-    name: "동물이름1",
-    content: "내용내용내용1",
-    time: "3/28 10:00",
-  },
-  {
-    id: 9,
-    name: "동물이름1",
-    content: "내용내용내용1",
-    time: "3/28 10:00",
-  },
-  {
-    id: 10,
-    name: "동물이름1",
-    content: "내용내용내용1",
-    time: "3/28 10:00",
-  },
-  {
-    id: 11,
-    name: "동물이름1",
-    content: "내용내용내용1",
-    time: "3/28 10:00",
-  },
-  {
-    id: 12,
-    name: "동물이름1",
-    content: "내용내용내용1",
-    time: "3/28 10:00",
-  },
-  {
-    id: 13,
-    name: "동물이름1",
-    content: "내용내용내용1",
-    time: "3/28 10:00",
-  },
-];
+import {
+  useGetCurrentUserId,
+  fetchConversation,
+  sendMessage,
+} from "../api/api";
 
 const MessageListPage = () => {
-  const [selectedMessageId, setSelectedMessageId] = useState(null);
+  const [selectedMessage, setSelectedMessage] = useState(null);
+  const [messages, setMessages] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const userId = useGetCurrentUserId();
+  const partnerId = "test010101"; // id 변경 필요
+
+  useEffect(() => {
+    if (userId) {
+      fetchMessagesData();
+    }
+  }, [userId]);
+
+  const fetchMessagesData = async () => {
+    const data = await fetchConversation(userId, partnerId);
+    if (data) {
+      setMessages(data);
+    } else {
+      console.log("데이터를 가져오지 못했습니다.");
+    }
+  };
 
   const handleSelectMessage = (message) => {
-    setSelectedMessageId(message.id);
+    setSelectedMessage(message);
   };
 
   const handleSendClick = () => {
@@ -100,6 +42,30 @@ const MessageListPage = () => {
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
+    fetchMessagesData();
+  };
+
+  const handleSendMessage = async (receiverId, text) => {
+    const payload = {
+      senderId: userId,
+      receiverId,
+      text,
+    };
+
+    console.log("전송할 데이터:", payload);
+
+    try {
+      const response = await sendMessage(payload);
+      if (response) {
+        fetchMessagesData();
+        setIsModalOpen(false);
+      } else {
+        alert("쪽지 전송 실패");
+      }
+    } catch (error) {
+      console.error("쪽지 전송 에러:", error);
+      alert("쪽지 전송 중 오류가 발생했습니다.");
+    }
   };
 
   return (
@@ -118,20 +84,30 @@ const MessageListPage = () => {
             <MessageListContainer>
               <MessageList
                 messages={messages}
-                selectedMessageId={selectedMessageId}
                 onSelectMessage={handleSelectMessage}
               />
             </MessageListContainer>
             <MessageDetailContainer>
-              <MessageDetail
-                message={messages.find((msg) => msg.id === selectedMessageId)}
-                onSendClick={handleSendClick}
-              />
+              {selectedMessage ? (
+                <MessageDetail
+                  messages={selectedMessage}
+                  partnerId={partnerId}
+                />
+              ) : (
+                <Placeholder>쪽지를 선택해 주세요</Placeholder>
+              )}
             </MessageDetailContainer>
           </MainContent>
         </ContentWrapper>
       </ContentContainer>
-      {isModalOpen && <MessageSendModal onClose={handleCloseModal} />}
+      {isModalOpen && (
+        <MessageSendModal
+          receiverId={partnerId}
+          onClose={handleCloseModal}
+          onClick={handleSendClick}
+          onSendMessage={handleSendMessage}
+        />
+      )}
     </PageContainer>
   );
 };
@@ -219,10 +195,25 @@ const MessageListContainer = styled.div`
 const MessageDetailContainer = styled.div`
   flex: 1;
   width: 65%;
-  background-color: white;
+  background-color: #fff;
   border: 1px solid #ddd;
   border-radius: 5px;
   overflow-y: auto;
   padding: 20px;
   max-height: 100%;
+  display: flex;
+  flex-direction: column-reverse;
+  justify-content: flex-start;
+`;
+
+const Placeholder = styled.div`
+  padding: 20px;
+  color: #aaa;
+  text-align: center;
+`;
+
+const SendIcon = styled.img`
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
 `;
