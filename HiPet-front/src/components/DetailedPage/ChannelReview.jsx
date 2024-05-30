@@ -3,19 +3,22 @@ import styled from 'styled-components';
 import Stars from './Stars';
 import Review from './Review';
 
-const ChannelReview = ({ rating, reviews }) => {
+const ChannelReview = ({ detailData }) => {
+    let totalRate = detailData.review.reviews.reduce((s, c) => s + c.rate, 0) / detailData.review.reviews.length;
+    totalRate = totalRate.toFixed(1);
+
     return (
         <ChannelReviewRapper className='wrap'>
-            {reviews >= 1 ?
+            {detailData.review.reviews.length >= 1 ?
                 <ReviewPage>
                     <div className='overall-rating-box'>
                         <span className='line'></span>
                         <div className='reviewRatingWrapper'>
-                            <span>{rating}</span>
-                            <Stars rating={rating} size={2.5} />
+                            <span>{totalRate}</span>
+                            <Stars rating={totalRate} size={2.5} />
                         </div>
                         <div className='percentage'>
-                            {Math.round(rating * 100 / 5)}% 만족후기
+                            {Math.round(totalRate * 100 / 5)}% 만족후기
                         </div>
                     </div>
                 </ReviewPage> :
@@ -24,11 +27,9 @@ const ChannelReview = ({ rating, reviews }) => {
                 </NoReviewPage>
             }
             <Reviews>
-                <Review />
-                <Review />
-                <Review />
-                <Review />
-                <Review />
+                {detailData.review.reviews.map((review, i)=>{
+                    return <Review review={review} />
+                })}
             </Reviews>
         </ChannelReviewRapper>
     );

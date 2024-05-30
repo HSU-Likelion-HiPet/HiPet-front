@@ -1,38 +1,63 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
+import useCalcDiffDate from '../../hooks/useCalcDiffDate';
+import deleteSelected from "../../assets/checkVector-white.png";
+import useConvertRegion from '../../hooks/useConvertRegion';
 
-const MainItem = ({ coin }) => {
-    const ar = ["#차분함", "#조용함", "#귀여움"];
+const MainItem = ({ animal, deleteTargetId, setDeleteTargetId }) => {
     const navigate = useNavigate();
+    const location = useLocation();
+    // 여기 createAt은 데이터 값으로 수정해야함
+    const diff = useCalcDiffDate(animal.createdAt);
 
     return (
         // 밑에 온클릭으로 페이지 이동
         <MainCard onClick={()=>{
-            navigate("/detailedPage", {state: {coin}});
-            window.location.reload()
+            if(location.pathname === "/mypageedit"){
+                if(deleteTargetId.includes(animal.id)){
+                    setDeleteTargetId(deleteTargetId.filter(e=>e!==animal.id));
+                }
+                else{
+                    setDeleteTargetId([
+                        ...deleteTargetId,
+                        animal.id
+                    ])
+                }
+            }
+            else{
+                navigate("/detailedPage", {state: {animal}});
+                window.location.reload();
+            }
         }}>
             <div className="imgWrapper">
-                    <img src={coin.image} alt="" />
+                    <img src={animal.image} alt="" />
                 </div>
             <div className="content-info">
                 <div className="content-wrap">
-                    <h3>{coin.name}</h3>
+                    <h3>{animal.animalName}</h3>
                     <ul>
-                        {ar.map((e, i) => {
-                            return <Tag key={i}>{e}</Tag>
+                        {animal.hashtag.map((tag, i) => {
+                            return <Tag key={i}>{tag.keyword}</Tag>
                         })}
                     </ul>
                     <div className='priceAndRegionInfo'>
-                        <span>{coin.current_price.toLocaleString()}원</span>
+                        <span>{animal.price}원</span>
                         <div>
-                            <span>서울 강서구</span>
+                            <span>{useConvertRegion(animal.region)}</span>
                             <span> | </span>
-                            <span>2주전</span>
+                            <span>{diff}</span>
                         </div>
                     </div>
                 </div>
             </div>
+            {location.pathname === "/mypageedit" && (
+                <DeleteSircle isSelected = {deleteTargetId.includes(animal.id)}>
+                    {deleteTargetId.includes(animal.id) &&(
+                        <img src={deleteSelected} alt="" />
+                    )}
+                </DeleteSircle>
+            )}
         </MainCard>
     );
 };
@@ -47,6 +72,7 @@ const MainCard = styled.li`
     background: ${({ theme }) => theme.mainContentCardBackGround};
     overflow: hidden;
     cursor: pointer;
+    position: relative;
     
 
     .imgWrapper{
@@ -91,7 +117,7 @@ const MainCard = styled.li`
 
                 > div{
                     font-size: 12px;
-                    width: 100px;
+                    width: 65px;
                     display: flex;
                     justify-content: space-between;
                     align-items: flex-end;
@@ -108,6 +134,24 @@ const Tag = styled.li`
     font-size: 12px;
     padding: 4px 8px;
     margin-right: 5px;
+`;
+
+const DeleteSircle = styled.div`
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    background: ${({isSelected})=>isSelected ? "#FFC800" : "#F7F8FA"};
+    border-radius: 50%;
+    top: 20px;
+    left: 320px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    img{
+        width: 22.5px;
+        height: 16.5px;
+    }
 `;
 
 export default MainItem;

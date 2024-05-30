@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { Route, Routes } from 'react-router-dom';
 import LoginPageHeader from '../components/LoginPage/LoginPageHeader';
 import SignIn from '../components/LoginPage/SignIn';
 import SignUp from '../components/LoginPage/SignUp';
@@ -21,7 +20,7 @@ const LoginPage = () => {
                 </SelectPage>
             </SignUpAndSignIn>
             <LoginSection>
-                {isSignUpPage ? <SignUp /> : <SignIn />}
+                {isSignUpPage ? <SignUp setIsSignUpPage={setIsSignUpPage} /> : <SignIn />}
             </LoginSection>
         </LoginPageWrapper>
     );
@@ -35,7 +34,7 @@ const LoginPageWrapper = styled.main`
     align-items: center;
 `;
 
-const LoginSection = styled.form`
+const LoginSection = styled.div`
     position: absolute;
     top: 56.5%;
     left: 50%;

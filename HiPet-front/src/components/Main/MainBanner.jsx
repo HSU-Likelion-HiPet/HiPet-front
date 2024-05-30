@@ -1,63 +1,119 @@
-import React from 'react';
-import styled, { css } from 'styled-components';
+import React, { useState } from 'react';
+import styled from 'styled-components';
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 import leftVector from "../../assets/mainBannerLeftVector.png";
 import rightVector from "../../assets/mainBannerRightVector.png";
+import Banner1 from "../../assets/Banner1.png";
+import Banner2 from "../../assets/Banner2.png";
 
 const MainBanner = () => {
+    const [currentSlide, setCurrentSlide] = useState(0);
+    const bannerArray = [Banner1, Banner2];
+
+    const ar = [1,2,3];
+    const settings = {
+        infinite: true,
+        speed: 500,
+        arrows: ar.length >= 2,
+        slidesToShow: 1,
+        slidesToScroll: 1,
+        nextArrow: (
+            <NextArrow>
+              <img src={rightVector} alt="" />
+            </NextArrow>
+          ),
+          prevArrow: (
+            <PrevArrow>
+              <img src={leftVector} alt="" />
+            </PrevArrow>
+          ),
+          dots: false,
+          afterChange: (current) => {
+            setCurrentSlide(current);
+          }
+      };
+      
     return (
         <MainBannerWrapper>
-            <Vector position = "left">
-                <VectorWrapper>
-                    <img src={leftVector} alt="left" />
-                </VectorWrapper>
-            </Vector>
-            <Vector position = "right">
-                <VectorWrapper>
-                    <img src={rightVector} alt="right" />
-                </VectorWrapper>
-            </Vector>
+            <StyledSlider {...settings}>
+                {bannerArray.map((e, i)=>{
+                    return <img src={e} key={i} alt="bannerImg" />
+                })}
+            </StyledSlider>
             <BannerIndex>
-                1/10
-            </BannerIndex>
+                {currentSlide + 1}/{bannerArray.length}    
+            </BannerIndex>    
         </MainBannerWrapper>
     );
 };
 
 const MainBannerWrapper = styled.section`
     width: 100%;
-    height: 553px;
+    /* height: 553px; */
     background: ${({theme})=>theme.mainBannerBackGroundColor};
     position: relative;
-    margin-top: 231px;
+    margin-top: 175px;
     left: 0;
 `;
 
-const Vector= styled.div`
-    cursor: pointer;
+const StyledSlider = styled(Slider)`
+    width: 100%;
+    height: 100%;
+
+    .slick-prev::before,
+    .slick-next::before {
+        opacity: 0;
+        display: none;
+    }
+
+    .slick-prev:hover,
+    .slick-prev:focus,
+    .slick-next:hover,
+    .slick-next:focus {
+        background-color: white;
+    }
+`;
+
+const PrevArrow = styled.div`
     width: 100px;
     height: 100px;
     border-radius: 100%;
-    display: flex;
+    background-color: #fff;
+    position: absolute;
+    left: 16.5vw;
+    top: 50%;
+    transform: translate(0, -50%);
+    display: flex !important;
     justify-content: center;
     align-items: center;
-    background: ${({theme})=>theme.basicWhite};
-    position: absolute;
-    top: 226px;
+    z-index: 50;
 
-    ${({position})=>position==="left"&&
-    css`
-        left: 16.5vw;
-    `};
-
-    ${({position})=>position==="right" && 
-    css`
-        right: 16.5vw;
-    `}
+    img{
+        width: 26px;
+        height: 40px;
+    }
 `;
 
-const VectorWrapper = styled.div`
-    width: 26px;
-    height: 40px;
+const NextArrow = styled.div`
+    width: 100px;
+    height: 100px;
+    border-radius: 100%;
+    background-color: #fff;
+    position: absolute;
+    right: 16.5vw;
+    top: 50%;
+    transform: translate(0, -50%);
+    display: flex !important;
+    justify-content: center;
+    align-items: center;
+    z-index: 50;
+
+    img{
+        width: 26px;
+        height: 40px;
+    }
 `;
 
 const BannerIndex = styled.div`
@@ -66,6 +122,7 @@ const BannerIndex = styled.div`
     position: absolute;
     bottom: 16px;
     right: 386px;
-`
+    z-index: 888;
+`;
 
 export default MainBanner;
