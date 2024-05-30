@@ -1,42 +1,106 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
+import { connectApi, useGetCurrentUserId } from "../../api/api";
+import DefaultProfileImage from "../../assets/DefaultProfileImage.png";
 
 const MyPageEditTop = () => {
   const [nickname, setNickname] = useState("");
   const [description, setDescription] = useState("");
-  const [selectedRegion, setSelectedRegion] = useState("서울");
+  const [selectedRegion, setSelectedRegion] = useState("_SEOUL");
+  const [profilePhoto, setProfilePhoto] = useState(null);
+  const [profilePhotoPreview, setProfilePhotoPreview] =
+    useState(DefaultProfileImage);
+  const [defaultProfileFile, setDefaultProfileFile] = useState(null);
+  const currentUserId = useGetCurrentUserId();
+
+  useEffect(() => {
+    fetch(DefaultProfileImage)
+      .then((res) => res.blob())
+      .then((blob) => {
+        const file = new File([blob], "DefaultProfileImage.png", {
+          type: "image/png",
+        });
+        setDefaultProfileFile(file);
+      });
+  }, []);
+
   const regions = [
-    "전체",
-    "서울",
-    "경기",
-    "인천",
-    "대전",
-    "세종",
-    "충남",
-    "충북",
-    "광주",
-    "전남",
-    "전북",
-    "대구",
-    "경북",
-    "부산",
-    "울산",
-    "경남",
-    "강원",
-    "제주",
-    "전국",
+    { label: "전체", value: "_NATIONAL" },
+    { label: "서울", value: "_SEOUL" },
+    { label: "경기", value: "_GYEONGGI" },
+    { label: "인천", value: "_INCHEON" },
+    { label: "대전", value: "_DAEJEON" },
+    { label: "세종", value: "_SEJONG" },
+    { label: "충남", value: "_CHUNGNAM" },
+    { label: "충북", value: "_CHUNGBUK" },
+    { label: "광주", value: "_GWANGJU" },
+    { label: "전남", value: "_JEOLLANAM" },
+    { label: "전북", value: "_JEOLLABUK" },
+    { label: "대구", value: "_DAEGU" },
+    { label: "경북", value: "_GYEONGBUK" },
+    { label: "부산", value: "_BUSAN" },
+    { label: "울산", value: "_ULSAN" },
+    { label: "경남", value: "_GYEONGNAM" },
+    { label: "강원", value: "_GANGWON" },
+    { label: "제주", value: "_JEJU" },
   ];
 
   const handleRegionClick = (region) => {
     setSelectedRegion(region);
   };
 
+  const handleProfilePhotoChange = (event) => {
+    const file = event.target.files[0];
+    setProfilePhoto(file);
+    setProfilePhotoPreview(URL.createObjectURL(file));
+  };
+
+  const handleSubmit = async () => {
+    const formData = new FormData();
+    formData.append("userName", nickname);
+    formData.append("region", selectedRegion);
+    formData.append("profileInfo", description);
+    formData.append(
+      "profilePhoto",
+      profilePhoto ? profilePhoto : defaultProfileFile
+    );
+
+    try {
+      const response = await connectApi.put(
+        `/api/user/${currentUserId}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      console.log("성공:", response.data);
+    } catch (error) {
+      if (error.response) {
+        console.error("서버 응답 에러:", error.response.data);
+      } else if (error.request) {
+        console.error("요청에 대한 응답이 없음:", error.request);
+      } else {
+        console.error("요청 설정 에러:", error.message);
+      }
+      console.error("프로필 업데이트 실패:", error.config);
+    }
+  };
+
   return (
     <Container>
       <ProfileSection>
         <ProfileImageContainer>
-          <ProfileImage />
-          <UploadButton>사진선택</UploadButton>
+          <ProfileImage src={profilePhotoPreview} alt="Profile" />
+          <UploadButton as="label">
+            사진선택
+            <input
+              type="file"
+              style={{ display: "none" }}
+              onChange={handleProfilePhotoChange}
+            />
+          </UploadButton>
         </ProfileImageContainer>
         <ProfileDetails>
           <FieldRow>
@@ -47,7 +111,7 @@ const MyPageEditTop = () => {
               placeholder="닉네임을 입력해 주세요."
               required
             />
-            <ManageButton>수정 완료</ManageButton>
+            <ManageButton onClick={handleSubmit}>수정 완료</ManageButton>
           </FieldRow>
           <Label>채널소개글</Label>
           <TextArea
@@ -60,11 +124,11 @@ const MyPageEditTop = () => {
           <RegionContainer>
             {regions.map((region) => (
               <RegionButton
-                key={region}
-                selected={selectedRegion === region}
-                onClick={() => handleRegionClick(region)}
+                key={region.value}
+                selected={selectedRegion === region.value}
+                onClick={() => handleRegionClick(region.value)}
               >
-                {region}
+                {region.label}
               </RegionButton>
             ))}
           </RegionContainer>
@@ -99,12 +163,13 @@ const ProfileImageContainer = styled.div`
   margin-right: 30px;
 `;
 
-const ProfileImage = styled.div`
+const ProfileImage = styled.img`
   width: 380px;
   height: 380px;
   background-color: #ddd;
   border-radius: 4px;
   margin-bottom: 10px;
+  object-fit: cover;
 `;
 
 const ProfileDetails = styled.div`

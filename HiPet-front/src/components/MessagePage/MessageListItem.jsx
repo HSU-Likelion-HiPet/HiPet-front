@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 
 const MessageListItem = ({ message, onClick }) => {
+  if (!message || !message.senderId) return null;
   return (
     <ItemContainer onClick={onClick}>
       <ItemHeader>

@@ -9,11 +9,13 @@ import {
   fetchConversation,
   sendMessage,
 } from "../api/api";
+import MessageSendIcon from "../assets/MessageSend.png";
 
 const MessageListPage = () => {
-  const [selectedMessage, setSelectedMessage] = useState(null);
+  const [selectedMessages, setSelectedMessages] = useState([]);
   const [messages, setMessages] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isMessageSelected, setIsMessageSelected] = useState(false);
   const userId = useGetCurrentUserId();
   const partnerId = "test010101"; // id 변경 필요
 
@@ -26,14 +28,33 @@ const MessageListPage = () => {
   const fetchMessagesData = async () => {
     const data = await fetchConversation(userId, partnerId);
     if (data) {
-      setMessages(data);
+      setMessages(data.sort((a, b) => new Date(b.sendAt) - new Date(a.sendAt)));
     } else {
       console.log("데이터를 가져오지 못했습니다.");
     }
   };
 
-  const handleSelectMessage = (message) => {
-    setSelectedMessage(message);
+  useEffect(() => {
+    // 초기 테스트 메시지 추가
+    setMessages([
+      {
+        id: 1,
+        senderId: "test010101",
+        text: "안녕하세요, 이것은 테스트 메시지입니다.",
+        sendAt: new Date().toISOString(),
+      },
+      {
+        id: 2,
+        senderId: userId,
+        text: "안녕하세요, 이것은 응답 메시지입니다.",
+        sendAt: new Date().toISOString(),
+      },
+    ]);
+  }, []);
+
+  const handleSelectMessage = () => {
+    setSelectedMessages(messages);
+    setIsMessageSelected(true);
   };
 
   const handleSendClick = () => {
@@ -42,7 +63,6 @@ const MessageListPage = () => {
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
-    fetchMessagesData();
   };
 
   const handleSendMessage = async (receiverId, text) => {
@@ -57,7 +77,17 @@ const MessageListPage = () => {
     try {
       const response = await sendMessage(payload);
       if (response) {
-        fetchMessagesData();
+        setMessages((prevMessages) =>
+          [
+            ...prevMessages,
+            {
+              id: prevMessages.length + 1,
+              senderId: userId,
+              text,
+              sendAt: new Date().toISOString(),
+            },
+          ].sort((a, b) => new Date(b.sendAt) - new Date(a.sendAt))
+        );
         setIsModalOpen(false);
       } else {
         alert("쪽지 전송 실패");
@@ -82,17 +112,27 @@ const MessageListPage = () => {
         <ContentWrapper>
           <MainContent>
             <MessageListContainer>
-              <MessageList
-                messages={messages}
-                onSelectMessage={handleSelectMessage}
-              />
+              {messages.length > 0 && (
+                <MessageList
+                  messages={[messages[0]]}
+                  onSelectMessage={handleSelectMessage}
+                />
+              )}
             </MessageListContainer>
             <MessageDetailContainer>
-              {selectedMessage ? (
-                <MessageDetail
-                  messages={selectedMessage}
-                  partnerId={partnerId}
-                />
+              {isMessageSelected ? (
+                <>
+                  <FixedHeader>
+                    <Nickname>{partnerId}</Nickname>
+                    <SendButton onClick={handleSendClick}>
+                      <SendIcon src={MessageSendIcon} alt="Send" />
+                    </SendButton>
+                  </FixedHeader>
+                  <MessageDetail
+                    messages={selectedMessages}
+                    partnerId={partnerId}
+                  />
+                </>
               ) : (
                 <Placeholder>쪽지를 선택해 주세요</Placeholder>
               )}
@@ -104,7 +144,6 @@ const MessageListPage = () => {
         <MessageSendModal
           receiverId={partnerId}
           onClose={handleCloseModal}
-          onClick={handleSendClick}
           onSendMessage={handleSendMessage}
         />
       )}
@@ -202,14 +241,38 @@ const MessageDetailContainer = styled.div`
   padding: 20px;
   max-height: 100%;
   display: flex;
-  flex-direction: column-reverse;
+  flex-direction: column;
   justify-content: flex-start;
+  position: relative;
 `;
 
 const Placeholder = styled.div`
   padding: 20px;
   color: #aaa;
   text-align: center;
+`;
+
+const FixedHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #fff;
+  border-bottom: 1px solid #ddd;
+  padding: 10px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+`;
+
+const Nickname = styled.div`
+  font-size: 18px;
+  font-weight: bold;
+`;
+
+const SendButton = styled.button`
+  border: none;
+  background: none;
+  cursor: pointer;
 `;
 
 const SendIcon = styled.img`

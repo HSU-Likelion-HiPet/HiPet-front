@@ -3,17 +3,15 @@ import styled from "styled-components";
 import MessageListItem from "./MessageListItem";
 
 const MessageList = ({ messages, onSelectMessage }) => {
-  const latestMessage = messages[messages.length - 1];
-
   return (
     <ListContainer>
-      {latestMessage && (
+      {messages.map((message, index) => (
         <MessageListItem
-          key={latestMessage.id}
-          message={latestMessage}
-          onClick={() => onSelectMessage(messages)}
+          key={index}
+          message={message}
+          onClick={onSelectMessage}
         />
-      )}
+      ))}
     </ListContainer>
   );
 };

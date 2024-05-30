@@ -1,16 +1,9 @@
 import React from "react";
 import styled from "styled-components";
-import MessageSendIcon from "../../assets/MessageSend.png";
 
-const MessageDetail = ({ messages, partnerId, onSendClick }) => {
+const MessageDetail = ({ messages, partnerId }) => {
   return (
     <DetailContainer>
-      <MessageHeader>
-        <MessageName>{partnerId}</MessageName>
-        <SendButton onClick={onSendClick}>
-          <SendIcon src={MessageSendIcon} alt="Send" />
-        </SendButton>
-      </MessageHeader>
       <MessagesContainer>
         {messages.map((msg, index) => (
           <MessageItem key={index}>
@@ -33,31 +26,6 @@ export default MessageDetail;
 const DetailContainer = styled.div`
   display: flex;
   flex-direction: column;
-`;
-
-const MessageHeader = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding-bottom: 10px;
-  border-bottom: 1px solid #ddd;
-`;
-
-const MessageName = styled.div`
-  font-size: 18px;
-  font-weight: bold;
-`;
-
-const SendButton = styled.button`
-  padding: 5px 10px;
-  border: none;
-  background: none;
-  cursor: pointer;
-`;
-
-const SendIcon = styled.img`
-  width: 24px;
-  height: 24px;
 `;
 
 const MessagesContainer = styled.div`
